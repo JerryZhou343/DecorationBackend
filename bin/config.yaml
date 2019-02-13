@@ -1,0 +1,10 @@
+port: 8081 #监听端空
+
+log:
+  size: 10240
+  dateFlag: true
+  path: "../log"
+  compressFlag: true
+  fileName: "decoration-backend-server.log"
+  releaseFlag: false # release 标签
+  level: 1 # 日志级别
