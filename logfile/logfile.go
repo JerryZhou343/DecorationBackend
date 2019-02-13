@@ -34,7 +34,7 @@ func NewLogFile(opts ...option) *logIO {
 		sizeFlag:     false,
 		dateFlag:     false,
 		compressFlag: false,
-		filePath:     "./log/",
+		filePath:     "../log/",
 		sizeValue:    10240,
 		todayDate:    getCurrentDate(),
 		closed:       false,
@@ -45,6 +45,10 @@ func NewLogFile(opts ...option) *logIO {
 	for _, o := range opts {
 		o(&IOIns)
 	}
+
+	//潜在的创建目录错误
+	absPath, _ := filepath.Abs(IOIns.filePath)
+	os.MkdirAll(absPath, 0666)
 
 	if IOIns.fileName != "" {
 		file, err := os.OpenFile(IOIns.filePath+IOIns.fileName,
@@ -91,6 +95,7 @@ func FileDate(flag bool) option {
 	}
 }
 
+//设置压缩标志
 func FileCompress(flag bool) option {
 	return func(o *logIO) {
 		o.compressFlag = flag
@@ -101,7 +106,6 @@ func FileCompress(flag bool) option {
 func (log *logIO) Write(p []byte) (n int, err error) {
 	str := (*string)(unsafe.Pointer(&p))
 	log.msgQueue <- (*str)
-	fmt.Println(*str)
 	return len(p), nil
 }
 
@@ -132,6 +136,7 @@ func (log *logIO) doRotate() {
 		}
 		y, m, d := time.Now().Date()
 		prefileName = filePath + "." + fmt.Sprintf("%.4d%.2d%.2d", y, m, d) + strconv.Itoa(log.cnt)
+		log.cnt += 1
 		err = os.Rename(filePath, prefileName)
 	}
 
@@ -170,6 +175,7 @@ func (log *logIO) worker() {
 
 				if log.dateFlag == true &&
 					nowDate != log.todayDate {
+					log.cnt = 1
 					log.doRotate()
 				}
 			}
