@@ -1,20 +1,36 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/mfslog/DecorationBackend/config"
 	"github.com/mfslog/DecorationBackend/logfile"
+	"github.com/mfslog/DecorationBackend/router"
 	"io"
 	"os"
 )
 
 func main() {
-	gin.DefaultWriter = io.MultiWriter(logfile.NewLogFile(logfile.FileName("DecorationServer.log")), os.Stdout)
+	//初始化配置
+	err := config.Init()
+	if err != nil {
+		fmt.Println("load config failed exit")
+		os.Exit(-1)
+	}
 
-	router := gin.Default()
-	router.GET("/ping", func(c *gin.Context) {
-		c.String(200, "pong")
-		//log.Print("aaaaa")
-	})
+	//初始化日志
+	gin.DefaultWriter = io.MultiWriter(logfile.NewLogFile(logfile.FileCompress(config.LogCompressFlag()),
+		logfile.FileDate(config.LogDateFlag()),
+		logfile.FileName(config.LogFileName()),
+		logfile.FilePath(config.LogPath()),
+		logfile.FileSize(config.LogSize()),
+	), os.Stdout)
 
-	router.Run(":8080")
+	//连接数据库
+
+	//初始化路由
+	r := router.Init()
+
+	//开启服务
+	r.Run(fmt.Sprintf(":%d", config.ListenPort()))
 }

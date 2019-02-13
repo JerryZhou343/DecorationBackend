@@ -81,10 +81,10 @@ func FilePath(path string) option {
 }
 
 //设置文件切割大小,单位为M
-func FileSize(size int) option {
+func FileSize(size int64) option {
 	return func(o *logIO) {
 		o.sizeFlag = true
-		o.sizeValue = int64(size) * 1024 * 1024
+		o.sizeValue = size * 1024 * 1024
 	}
 }
 

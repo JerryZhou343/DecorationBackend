@@ -1,4 +1,5 @@
 port: 8081 #监听端空
+releaseFlag: false # release 标签
 
 log:
   size: 10240
@@ -6,5 +7,11 @@ log:
   path: "../log"
   compressFlag: true
   fileName: "decoration-backend-server.log"
-  releaseFlag: false # release 标签
   level: 1 # 日志级别
+
+MySQL:
+  name: "decoration" # 数据名称
+  addr: "127.0.0.1:3306" # 数据库主机地址，上线必须修改
+  user: "root" # 数据用户名，上线必须修改
+  password: "root" #  数据库密码，上线必须修改
+  conLimit: 32 # 数据链接数限制
