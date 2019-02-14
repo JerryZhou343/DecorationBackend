@@ -2,7 +2,7 @@ package jwtauth
 
 import (
 	"errors"
-	"github.com/dgrijalva/jwtauth-go"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strings"

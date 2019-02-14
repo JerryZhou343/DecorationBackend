@@ -9,8 +9,8 @@ log:
   fileName: "decoration-backend-server.log"
   level: 1 # 日志级别
 
-MySQL:
-  name: "decoration" # 数据名称
+mySQL:
+  name: "decoration"
   addr: "127.0.0.1:3306" # 数据库主机地址，上线必须修改
   user: "root" # 数据用户名，上线必须修改
   password: "root" #  数据库密码，上线必须修改

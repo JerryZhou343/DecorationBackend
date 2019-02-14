@@ -9,7 +9,7 @@ type config struct {
 	Port        int         `yaml:"port"`
 	ReleaseFlag bool        `yaml:"releaseFlag"`
 	Log         logConfig   `yaml:"log"`
-	MySQL       mysqlConfig `yaml:"MySQL"`
+	mySQL       mySQLConfig `yaml:"mySQL"`
 }
 
 type logConfig struct {
@@ -21,12 +21,12 @@ type logConfig struct {
 	Level        int    `yaml:"level"`
 }
 
-type mysqlConfig struct {
-	Name     string `yaml:"name"`
-	Addr     string `yaml:"addr"`
-	User     string `yaml:"user"`
-	Password string `yaml:"password"`
-	ConLimit int    `yaml:"conLimit"`
+type mySQLConfig struct {
+	name      string `yaml:"name"`
+	Addr      string `yaml:"addr"`
+	User      string `yaml:"user"`
+	Password  string `yaml:"password"`
+	poolLimit int    `yaml:"poolLimit"`
 }
 
 var defaultIns config
@@ -78,4 +78,28 @@ func ListenPort() int {
 //发布模式标签
 func ReleaseFlag() bool {
 	return defaultIns.ReleaseFlag
+}
+
+//db 地址
+func MySQLAddr() string {
+	return defaultIns.mySQL.Addr
+}
+
+//返回mySQLDB数据库用户名
+func MySQLUser() string {
+	return defaultIns.mySQL.User
+}
+
+//db 密码
+func MySQLPassword() string {
+	return defaultIns.mySQL.Password
+}
+
+//db 连接数
+func MySQLPoolLimit() int {
+	return defaultIns.mySQL.poolLimit
+}
+
+func MySQLDBName() string {
+	return defaultIns.mySQL.name
 }

@@ -5,7 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/mfslog/DecorationBackend/config"
 	"github.com/mfslog/DecorationBackend/logfile"
-	"github.com/mfslog/DecorationBackend/router"
+	"github.com/mfslog/DecorationBackend/gin-engine"
 	"io"
 	"os"
 )
@@ -29,7 +29,7 @@ func main() {
 	//连接数据库
 
 	//初始化路由
-	r := router.Init()
+	r := gin_engine.Init()
 
 	//开启服务
 	r.Run(fmt.Sprintf(":%d", config.ListenPort()))
