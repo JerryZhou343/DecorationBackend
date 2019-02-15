@@ -16,6 +16,15 @@ func Init() error {
 
 	defaultEngine, err = xorm.NewEngine("mysql", dataSource)
 
+	if err != nil {
+		return err
+	}
+
 	defaultEngine.SetMaxIdleConns(config.MySQLPoolLimit())
 	return nil
+}
+
+//返回数据库连接
+func DB() *xorm.Engine {
+	return defaultEngine
 }

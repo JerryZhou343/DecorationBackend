@@ -4,9 +4,11 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/mfslog/DecorationBackend/config"
-	"github.com/mfslog/DecorationBackend/logfile"
+	"github.com/mfslog/DecorationBackend/db"
 	"github.com/mfslog/DecorationBackend/gin-engine"
+	"github.com/mfslog/DecorationBackend/logfile"
 	"io"
+	"log"
 	"os"
 )
 
@@ -27,7 +29,11 @@ func main() {
 	), os.Stdout)
 
 	//连接数据库
-
+	err = db.Init()
+	if err != nil {
+		log.Printf("%e", err)
+		os.Exit(-1)
+	}
 	//初始化路由
 	r := gin_engine.Init()
 
