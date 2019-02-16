@@ -5,7 +5,7 @@
 *.so
 *.dylib
 bin/decoration-backend-server
-
+bin/decoration-server
 # Test binary, build with `go test -c`
 *.test
 

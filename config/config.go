@@ -9,7 +9,7 @@ type config struct {
 	Port        int         `yaml:"port"`
 	ReleaseFlag bool        `yaml:"releaseFlag"`
 	Log         logConfig   `yaml:"log"`
-	mySQL       mySQLConfig `yaml:"mySQL"`
+	MySQL       mySQLConfig `yaml:"mySQL"`
 }
 
 type logConfig struct {
@@ -22,11 +22,11 @@ type logConfig struct {
 }
 
 type mySQLConfig struct {
-	name      string `yaml:"name"`
+	Name      string `yaml:"name"`
 	Addr      string `yaml:"addr"`
 	User      string `yaml:"user"`
 	Password  string `yaml:"password"`
-	poolLimit int    `yaml:"poolLimit"`
+	PoolLimit int    `yaml:"poolLimit"`
 }
 
 var defaultIns config
@@ -82,24 +82,24 @@ func ReleaseFlag() bool {
 
 //db 地址
 func MySQLAddr() string {
-	return defaultIns.mySQL.Addr
+	return defaultIns.MySQL.Addr
 }
 
 //返回mySQLDB数据库用户名
 func MySQLUser() string {
-	return defaultIns.mySQL.User
+	return defaultIns.MySQL.User
 }
 
 //db 密码
 func MySQLPassword() string {
-	return defaultIns.mySQL.Password
+	return defaultIns.MySQL.Password
 }
 
 //db 连接数
 func MySQLPoolLimit() int {
-	return defaultIns.mySQL.poolLimit
+	return defaultIns.MySQL.PoolLimit
 }
 
 func MySQLDBName() string {
-	return defaultIns.mySQL.name
+	return defaultIns.MySQL.Name
 }

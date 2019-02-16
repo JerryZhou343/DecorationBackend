@@ -11,11 +11,14 @@ var defaultEngine *xorm.Engine
 
 func Init() error {
 	var err error
-	dataSource := fmt.Sprintf("%s:%s@%s/%s", config.MySQLUser(), config.MySQLPassword(),
+
+	dataSource := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8", config.MySQLUser(), config.MySQLPassword(),
 		config.MySQLAddr(), config.MySQLDBName())
 
-	defaultEngine, err = xorm.NewEngine("mysql", dataSource)
-
+	defaultEngine, _ = xorm.NewEngine("mysql", dataSource)
+	fmt.Println(dataSource)
+	err = defaultEngine.Ping()
+	defaultEngine.ShowSQL(true)
 	if err != nil {
 		return err
 	}
