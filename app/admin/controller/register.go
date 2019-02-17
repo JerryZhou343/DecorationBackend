@@ -11,12 +11,12 @@ func RegisterRouter(r *gin.Engine) {
 	mgt := r.Group("/mgt/")
 	//admin.Use(jwtauth.JWTAuth())
 	{
-		mgt.GET("category/id", queryCategory)
+		mgt.GET("category/:id", queryCategory)
 		mgt.POST("category/", addCategory)
-		mgt.PUT("category/id", modifyCategory)
-		mgt.DELETE("category/id", delCategory)
+		mgt.PUT("category/:id", updateCategory)
+		mgt.DELETE("category/:id", delCategory)
 
-		mgt.GET("/category_tree/:parent_id", queryCategoryTree)
+		mgt.GET("category_tree/:parent_id", queryCategoryTree)
 
 	}
 

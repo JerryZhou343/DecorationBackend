@@ -1,5 +1,5 @@
 port: 8081 #监听端空
-releaseFlag: true # release 标签
+releaseFlag: false # release 标签
 
 log:
   size: 10240
