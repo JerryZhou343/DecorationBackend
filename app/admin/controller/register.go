@@ -2,18 +2,22 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/mfslog/DecorationBackend/middleware/jwtauth"
 )
 
 func RegisterRouter(r *gin.Engine) {
 
 	r.POST("/login", login)
 
-	admin := r.Group("/admin")
-	admin.Use(jwtauth.JWTAuth())
+	mgt := r.Group("/mgt/")
+	//admin.Use(jwtauth.JWTAuth())
 	{
-		admin.GET("/tag", queryTag)
-		admin.GET("/tag_tree", queryTagTree)
+		mgt.GET("category/id", queryCategory)
+		mgt.POST("category/", addCategory)
+		mgt.PUT("category/id", modifyCategory)
+		mgt.DELETE("category/id", delCategory)
+
+		mgt.GET("/category_tree/:parent_id", queryCategoryTree)
+
 	}
 
 }
