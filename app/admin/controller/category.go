@@ -10,7 +10,7 @@ import (
 )
 
 //添加一个tag
-func addCategory(c *gin.Context) {
+func createCategory(c *gin.Context) {
 	info := form.Category{}
 	err := c.BindJSON(&info)
 	var category models.TCategory
@@ -80,7 +80,7 @@ FAILED:
 }
 
 //查询一个tag
-func queryCategory(c *gin.Context) {
+func selectCategory(c *gin.Context) {
 	var err error
 	var tCategory *models.TCategory
 	var categoryInfo form.Category

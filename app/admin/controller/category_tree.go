@@ -9,7 +9,7 @@ import (
 	"strconv"
 )
 
-func queryCategoryTree(c *gin.Context) {
+func selectCategoryTree(c *gin.Context) {
 	parentIdStr := c.Param("parent_id")
 	fmt.Println("here")
 	var parentId int
