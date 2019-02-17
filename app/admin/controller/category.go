@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/mfslog/DecorationBackend/app/admin/form"
 	"github.com/mfslog/DecorationBackend/app/admin/models"
@@ -40,7 +41,8 @@ func updateCategory(c *gin.Context) {
 	category := models.TCategory{}
 	categoryIdStr := c.Param("id")
 	var categoryId int
-	if err == nil {
+	if err != nil {
+		fmt.Printf("here %v", err)
 		goto FAILED
 	}
 
@@ -72,6 +74,7 @@ func delCategory(c *gin.Context) {
 	}
 	models.DelCategory(categoryId)
 	c.Status(http.StatusAccepted)
+	return
 FAILED:
 	c.Status(http.StatusBadRequest)
 }
@@ -93,8 +96,9 @@ func queryCategory(c *gin.Context) {
 	categoryInfo.Name = tCategory.Name
 	categoryInfo.Priority = tCategory.Priority
 	categoryInfo.Remark = tCategory.Remark
-
 	c.JSON(http.StatusOK, categoryInfo)
+	return
+
 FAILED:
 	c.Status(http.StatusBadRequest)
 }

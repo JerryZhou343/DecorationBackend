@@ -16,14 +16,15 @@ type TCategory struct {
 	OperatorId int
 }
 
-func GetChildCategoryByParentId(pid int) ([]*TCategory, error) {
+//查询以该分类为父分类的子分类
+func GetChildCategoryByParentId(pid int) ([]TCategory, error) {
 	engine := db.DB()
-	result := []*TCategory{}
-	_, err := engine.Where("parent_id=?", pid).Get(&result)
-
+	result := []TCategory{}
+	err := engine.Where("parent_id=?", pid).Find(&result)
 	return result, err
 }
 
+//查询分类信息
 func GetCategoryById(id int) (*TCategory, error) {
 	engine := db.DB()
 	result := TCategory{}
@@ -32,6 +33,7 @@ func GetCategoryById(id int) (*TCategory, error) {
 	return &result, err
 }
 
+//插入一条分类信息
 func InsertCategory(category *TCategory) error {
 	engine := db.DB()
 	cnt, err := engine.InsertOne(category)
@@ -43,6 +45,7 @@ func InsertCategory(category *TCategory) error {
 
 }
 
+//更新一条分类信息
 func UpdateCategoryInfo(id int, category *TCategory) error {
 	engine := db.DB()
 
@@ -55,6 +58,7 @@ func UpdateCategoryInfo(id int, category *TCategory) error {
 	return nil
 }
 
+//删除一条分类信息
 func DelCategory(id int) error {
 	engine := db.DB()
 	tmp := TCategory{
