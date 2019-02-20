@@ -8,6 +8,7 @@ import (
 type config struct {
 	Port        int         `yaml:"port"`
 	ReleaseFlag bool        `yaml:"releaseFlag"`
+	PicPath     string      `yaml:"picPath"`
 	Log         logConfig   `yaml:"log"`
 	MySQL       mySQLConfig `yaml:"mySQL"`
 }
@@ -78,6 +79,10 @@ func ListenPort() int {
 //发布模式标签
 func ReleaseFlag() bool {
 	return defaultIns.ReleaseFlag
+}
+
+func PicPath() string {
+	return defaultIns.PicPath
 }
 
 //db 地址

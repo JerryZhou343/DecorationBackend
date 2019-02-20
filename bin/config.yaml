@@ -1,5 +1,6 @@
 port: 8081 #监听端空
 releaseFlag: false # release 标签
+picPath: ../pic
 
 log:
   size: 10240

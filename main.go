@@ -10,6 +10,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"path/filepath"
 )
 
 func main() {
@@ -27,6 +28,17 @@ func main() {
 		logfile.FilePath(config.LogPath()),
 		logfile.FileSize(config.LogSize()),
 	), os.Stdout)
+
+	//创建图片保存目录
+	var absPath string
+	absPath, err = filepath.Abs(config.PicPath())
+	if absPath == "" || err != nil {
+		os.Exit(-1)
+	}
+	err = os.MkdirAll(absPath, 0666)
+	if err != nil {
+		os.Exit(-1)
+	}
 
 	//连接数据库
 	err = db.Init()

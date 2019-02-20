@@ -23,7 +23,14 @@ func RegisterRouter(r *gin.Engine) {
 		//图片
 		mgt.POST("picture/", createPicture)
 		mgt.PUT("picture/:id", updatePicture)
+		mgt.GET("picture/:id", selectPicture)
 		mgt.DELETE("picture/:id", delPicture)
+
+		//案例
+		mgt.POST("case/", createCase)
+		mgt.PUT("case/:id", updateCase)
+		mgt.GET("case/:id", selectCase)
+		mgt.DELETE("case/:id", delCase)
 
 	}
 
