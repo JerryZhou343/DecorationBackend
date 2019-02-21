@@ -3,12 +3,12 @@ releaseFlag: false # release 标签
 picPath: ../pic
 
 log:
-  size: 10240
+  size: 102400
   dateFlag: true
   path: ../log
   compressFlag: true
   fileName: decoration-backend-server.log
-  level: 1 # 日志级别
+  level: debug # 日志级别panic,fatal,error,warn,info,debug,trace
 
 mySQL:
   name: decoration

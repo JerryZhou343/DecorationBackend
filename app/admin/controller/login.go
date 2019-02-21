@@ -3,7 +3,7 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/mfslog/DecorationBackend/app/admin/form"
-	"github.com/mfslog/DecorationBackend/app/admin/models"
+	"github.com/mfslog/DecorationBackend/models"
 	"net/http"
 )
 

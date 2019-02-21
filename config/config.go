@@ -19,7 +19,7 @@ type logConfig struct {
 	Path         string `yaml:"path"`
 	CompressFlag bool   `yaml:"compressFlag"`
 	Name         string `yaml:"fileName"`
-	Level        int    `yaml:"level"`
+	Level        string `yaml:"level"`
 }
 
 type mySQLConfig struct {
@@ -69,6 +69,10 @@ func LogFileName() string {
 //日志压缩标识
 func LogCompressFlag() bool {
 	return defaultIns.Log.CompressFlag
+}
+
+func LogLevel() string {
+	return defaultIns.Log.Level
 }
 
 //监听端口

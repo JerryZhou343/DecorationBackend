@@ -7,8 +7,8 @@ import (
 	"github.com/mfslog/DecorationBackend/db"
 	"github.com/mfslog/DecorationBackend/gin-engine"
 	"github.com/mfslog/DecorationBackend/logfile"
+	log "github.com/sirupsen/logrus"
 	"io"
-	"log"
 	"os"
 	"path/filepath"
 )
@@ -22,13 +22,21 @@ func main() {
 	}
 
 	//初始化日志
-	gin.DefaultWriter = io.MultiWriter(logfile.NewLogFile(logfile.FileCompress(config.LogCompressFlag()),
+	logwriter := io.MultiWriter(logfile.NewLogFile(logfile.FileCompress(config.LogCompressFlag()),
 		logfile.FileDate(config.LogDateFlag()),
 		logfile.FileName(config.LogFileName()),
 		logfile.FilePath(config.LogPath()),
 		logfile.FileSize(config.LogSize()),
 	), os.Stdout)
 
+	log.SetOutput(logwriter)
+	l, err := log.ParseLevel(config.LogLevel())
+	if err != nil {
+		os.Exit(-1)
+	}
+	log.SetLevel(l)
+
+	gin.DefaultWriter = logwriter
 	//创建图片保存目录
 	var absPath string
 	absPath, err = filepath.Abs(config.PicPath())
