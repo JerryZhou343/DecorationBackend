@@ -47,6 +47,7 @@ CREATE TABLE `t_case`(
     `owner_name` varchar(64) default null,
     `phone_number` varchar(20) default null,
     `addr` varchar(200) default null,
+    `state` tinyint not null default 1 comment '1 激活，0 未激活'
     `created` int not null,
     `updated` int default 0,
     primary key (`id`)
@@ -70,7 +71,7 @@ create table `t_pic_category`(
     `category_id` bigint not null,
     `created` int not null,
     `updated` int default 0,
-	  `state` tinyint not null comment '0 失效，1 有效',
+	  `state` tinyint default 1 not null comment '0 失效，1 有效',
     primary key (`id`),
     unique key(`pic_id`,`category_id`)
 );
@@ -81,6 +82,8 @@ create table `t_picture`(
     `case_id` bigint not null comment '归属案例ID',
     `name` varchar(64) default null,
     `addr` varchar(1024) not null,
+    `state` tinyint default 1 not null comment '0失效,1有效'
+    `remark` varchar(128) default  null,
     `created` int default 0,
     primary key (`id`)
 );

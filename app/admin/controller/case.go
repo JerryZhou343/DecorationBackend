@@ -38,7 +38,6 @@ func createCase(c *gin.Context) {
 	dbCase.Price = info.Price
 	dbCase.PhoneNumber = info.PhoneNumber
 	dbCase.Type = info.Type
-	//TODO: 事物操作
 	cnt, err = engine.InsertOne(&dbCase)
 	if err != nil {
 		logrus.Errorf("%v", err)
