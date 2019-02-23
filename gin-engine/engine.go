@@ -2,8 +2,8 @@ package gin_engine
 
 import (
 	"github.com/gin-gonic/gin"
-	ac "github.com/mfslog/DecorationBackend/app/admin/controller"
-	ec "github.com/mfslog/DecorationBackend/app/explore/controller"
+	ar "github.com/mfslog/DecorationBackend/app/admin/route"
+	er "github.com/mfslog/DecorationBackend/app/explore/route"
 	"github.com/mfslog/DecorationBackend/config"
 )
 
@@ -13,8 +13,8 @@ func Init() *gin.Engine {
 		gin.SetMode(gin.ReleaseMode)
 	}
 
-	ec.RegisterRouter(r)
-	ac.RegisterRouter(r)
+	er.RegisterRouter(r)
+	ar.RegisterRouter(r)
 
 	return r
 }

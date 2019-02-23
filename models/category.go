@@ -64,11 +64,7 @@ func DelCategory(id int) error {
 	tmp := TCategory{
 		State: 0,
 	}
-	cnt, err := engine.ID(id).Update(&tmp)
-	//TODO:区分失败的原因
-	if cnt == 0 || err != nil {
-		return err
-	}
+	_, err := engine.ID(id).Update(&tmp)
 
-	return nil
+	return err
 }

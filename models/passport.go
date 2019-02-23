@@ -33,8 +33,8 @@ func CheckPassport(username, passwd string) bool {
 			if fmt.Sprintf("%x", password[:]) == auth.Password {
 				return true
 			} else {
-				fmt.Println(slat.Slat)
-				fmt.Printf("%x", string(password[:]))
+				//fmt.Println(slat.Slat)
+				//fmt.Printf("%x", string(password[:]))
 				return false
 			}
 		} else {

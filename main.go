@@ -43,10 +43,13 @@ func main() {
 	if absPath == "" || err != nil {
 		os.Exit(-1)
 	}
-	err = os.MkdirAll(absPath, 0666)
+
+	err = os.MkdirAll(absPath, 0777)
 	if err != nil {
 		os.Exit(-1)
 	}
+
+	config.SetPicPath(absPath)
 
 	//连接数据库
 	err = db.Init()

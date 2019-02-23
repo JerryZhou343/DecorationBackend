@@ -2,14 +2,14 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/mfslog/DecorationBackend/app/admin/form"
+	"github.com/mfslog/DecorationBackend/form"
 	"github.com/mfslog/DecorationBackend/models"
 	"github.com/sirupsen/logrus"
 	"net/http"
 	"strconv"
 )
 
-func selectCategoryTree(c *gin.Context) {
+func GetCategoryTree(c *gin.Context) {
 	parentIdStr := c.Param("parent_id")
 	var parentId int
 	var err error

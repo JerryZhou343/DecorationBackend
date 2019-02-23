@@ -14,3 +14,4 @@ bin/decoration-server
 .idea
 go.sum
 log
+pic

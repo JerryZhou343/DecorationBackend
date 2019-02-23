@@ -112,3 +112,14 @@ func MySQLPoolLimit() int {
 func MySQLDBName() string {
 	return defaultIns.MySQL.Name
 }
+
+//设置图片的绝对路径
+var picturePath string
+
+func GetPicPath() string {
+	return picturePath
+}
+
+func SetPicPath(path string) {
+	picturePath = path
+}

@@ -3,14 +3,14 @@ package controller
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/mfslog/DecorationBackend/app/admin/form"
+	"github.com/mfslog/DecorationBackend/form"
 	"github.com/mfslog/DecorationBackend/models"
 	"net/http"
 	"strconv"
 )
 
 //添加一个tag
-func createCategory(c *gin.Context) {
+func CreateCategory(c *gin.Context) {
 	info := form.Category{}
 	err := c.BindJSON(&info)
 	var category models.TCategory
@@ -34,7 +34,7 @@ FAILED:
 }
 
 //修改一个tag
-func updateCategory(c *gin.Context) {
+func UpdateCategory(c *gin.Context) {
 	var err error
 	info := form.Category{}
 	err = c.BindJSON(&info)
@@ -64,7 +64,7 @@ FAILED:
 }
 
 //删除一个tag
-func delCategory(c *gin.Context) {
+func DelCategory(c *gin.Context) {
 	var err error
 	categoryIdStr := c.Param("id")
 	var categoryId int
@@ -80,7 +80,7 @@ FAILED:
 }
 
 //查询一个tag
-func selectCategory(c *gin.Context) {
+func GetCategory(c *gin.Context) {
 	var err error
 	var tCategory *models.TCategory
 	var categoryInfo form.Category

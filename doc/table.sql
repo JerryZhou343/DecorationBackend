@@ -82,8 +82,9 @@ create table `t_picture`(
     `case_id` bigint not null comment '归属案例ID',
     `name` varchar(64) default null,
     `addr` varchar(1024) not null,
-    `state` tinyint default 1 not null comment '0失效,1有效'
-    `remark` varchar(128) default  null,
+    `state` tinyint default 1 not null comment '0失效,1有效',
+    `remark` varchar(1024) default  null,
     `created` int default 0,
+    `updated` int default  0,
     primary key (`id`)
 );

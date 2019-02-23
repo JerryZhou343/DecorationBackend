@@ -52,7 +52,7 @@ func NewLogFile(opts ...option) *logIO {
 
 	if IOIns.fileName != "" {
 		file, err := os.OpenFile(IOIns.filePath+IOIns.fileName,
-			os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
+			os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0777)
 		if err != nil {
 			fmt.Println(err.Error())
 		}
