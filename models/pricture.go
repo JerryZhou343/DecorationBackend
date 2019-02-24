@@ -10,7 +10,7 @@ type TPicture struct {
 	Addr    string `xorm:"varchar(1024)"`
 	State   int    `xorm:not null default 1`
 	Created int    `xorm:"created"`
-	Update  int    `xorm:"updated"`
+	Updated int    `xorm:"updated"`
 }
 
 func InsertOnePicture(pic *TPicture) error {

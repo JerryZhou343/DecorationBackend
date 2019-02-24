@@ -39,7 +39,7 @@ func main() {
 	gin.DefaultWriter = logwriter
 	//创建图片保存目录
 	var absPath string
-	absPath, err = filepath.Abs(config.PicPath())
+	absPath, err = filepath.Abs(config.PicSavePath())
 	if absPath == "" || err != nil {
 		os.Exit(-1)
 	}

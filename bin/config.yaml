@@ -1,6 +1,10 @@
 port: 8081 #监听端空
 releaseFlag: false # release 标签
-picPath: ../pic
+
+picture:
+  savePath: ../upload #文件存放路径
+  urlPrefix: http://127.0.0.1:8081 # url 地址前缀
+  urlRelativePath: upload/ #url 相对路径
 
 log:
   size: 102400

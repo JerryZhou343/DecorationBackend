@@ -5,6 +5,7 @@ import (
 	ar "github.com/mfslog/DecorationBackend/app/admin/route"
 	er "github.com/mfslog/DecorationBackend/app/explore/route"
 	"github.com/mfslog/DecorationBackend/config"
+	"net/http"
 )
 
 func Init() *gin.Engine {
@@ -13,6 +14,8 @@ func Init() *gin.Engine {
 		gin.SetMode(gin.ReleaseMode)
 	}
 
+	//图片URL
+	r.StaticFS(config.PicUrlRelativePath(), http.Dir(config.GetPicPath()))
 	er.RegisterRouter(r)
 	ar.RegisterRouter(r)
 

@@ -6,11 +6,17 @@ import (
 )
 
 type config struct {
-	Port        int         `yaml:"port"`
-	ReleaseFlag bool        `yaml:"releaseFlag"`
-	PicPath     string      `yaml:"picPath"`
-	Log         logConfig   `yaml:"log"`
-	MySQL       mySQLConfig `yaml:"mySQL"`
+	Port        int           `yaml:"port"`
+	ReleaseFlag bool          `yaml:"releaseFlag"`
+	Picture     PictureConfig `yaml:"picture"`
+	Log         logConfig     `yaml:"log"`
+	MySQL       mySQLConfig   `yaml:"mySQL"`
+}
+
+type PictureConfig struct {
+	SavePath        string `yaml:"savePath"`
+	UrlPrefix       string `yaml:"urlPrefix"`
+	UrlRelativePath string `yaml:"urlRelativePath"`
 }
 
 type logConfig struct {
@@ -85,8 +91,19 @@ func ReleaseFlag() bool {
 	return defaultIns.ReleaseFlag
 }
 
-func PicPath() string {
-	return defaultIns.PicPath
+//图片存放地址
+func PicSavePath() string {
+	return defaultIns.Picture.SavePath
+}
+
+//图片URL 前缀
+func PicUrlPrefix() string {
+	return defaultIns.Picture.UrlPrefix
+}
+
+//图片URL相对地址
+func PicUrlRelativePath() string {
+	return defaultIns.Picture.UrlRelativePath
 }
 
 //db 地址

@@ -2,8 +2,8 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/mfslog/DecorationBackend/form"
 	"github.com/mfslog/DecorationBackend/config"
+	"github.com/mfslog/DecorationBackend/form"
 	"github.com/mfslog/DecorationBackend/models"
 	"github.com/mfslog/DecorationBackend/util"
 	"github.com/sirupsen/logrus"
@@ -37,7 +37,7 @@ func GetPicture(c *gin.Context) {
 		PicId:  picId,
 		Name:   picInfo.Name,
 		Remark: picInfo.Remark,
-		Addr:   picInfo.Addr,
+		Addr:   util.GetPicFullUrl(picInfo.Addr),
 	}
 
 	c.JSON(http.StatusOK, formInfo)
@@ -74,13 +74,14 @@ func CreatePicture(c *gin.Context) {
 	md5Value := util.GetMD5(caseIdStr + picName)
 	fileName := md5Value + "." + suffix
 	absFileName := config.GetPicPath() + "/" + fileName
-	relativePath := config.PicPath() + "/" + fileName
+	relativePath := fileName
 	f, err := util.PathExists(absFileName)
 	if err != nil {
 		logrus.Errorf("%v", err)
 		c.Status(http.StatusInternalServerError)
 		return
 	}
+
 	//删除目标文件
 	if f {
 		err = os.Remove(absFileName)
@@ -109,7 +110,13 @@ func CreatePicture(c *gin.Context) {
 		c.Status(http.StatusInternalServerError)
 		return
 	}
-	c.Status(http.StatusOK)
+	//c.Status(http.StatusOK)
+
+	c.JSON(http.StatusOK, gin.H{
+		"code":   http.StatusOK,
+		"msg":    "success",
+		"imgUrl": util.GetPicFullUrl(relativePath),
+	})
 }
 
 //软删除图片
