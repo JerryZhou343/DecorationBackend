@@ -58,8 +58,26 @@ func main() {
 		os.Exit(-1)
 	}
 	//初始化路由
-	r := gin_engine.Init()
-
+	httpRouter, httpsRouter := engine.Init()
+	//开启https 服务
+	if config.CRTPath() == "" ||
+		config.PrivateKeyPath() == "" {
+		log.Fatalf("certificate can't empty")
+		os.Exit(-1)
+	}
+	ch := make(chan error)
+	//开启https 服务
+	go func() {
+		err := httpsRouter.RunTLS(fmt.Sprintf(":%d", config.ListenTLSPort()),
+			config.CRTPath(), config.PrivateKeyPath())
+		ch <- err
+	}()
 	//开启服务
-	r.Run(fmt.Sprintf(":%d", config.ListenPort()))
+	go func() {
+		err := httpRouter.Run(fmt.Sprintf(":%d", config.ListenPort()))
+		ch <- err
+	}()
+	//异常退出
+	err = <-ch
+	log.Errorf("%v", err)
 }

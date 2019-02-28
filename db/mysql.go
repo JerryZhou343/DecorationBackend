@@ -9,6 +9,7 @@ import (
 
 var defaultEngine *xorm.Engine
 
+//Init 初始化MySQL连接
 func Init() error {
 	var err error
 
@@ -27,7 +28,7 @@ func Init() error {
 	return nil
 }
 
-//返回数据库连接
+//DB 返回数据库连接
 func DB() *xorm.Engine {
 	return defaultEngine
 }

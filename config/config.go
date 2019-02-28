@@ -7,16 +7,18 @@ import (
 
 type config struct {
 	Port        int           `yaml:"port"`
+	TLSPort     int           `yaml:"TLSPort"`
 	ReleaseFlag bool          `yaml:"releaseFlag"`
-	Picture     PictureConfig `yaml:"picture"`
+	Picture     pictureConfig `yaml:"picture"`
 	Log         logConfig     `yaml:"log"`
 	MySQL       mySQLConfig   `yaml:"mySQL"`
+	Auth        authConfig    `yaml:"auth"`
 }
 
-type PictureConfig struct {
+type pictureConfig struct {
 	SavePath        string `yaml:"savePath"`
-	UrlPrefix       string `yaml:"urlPrefix"`
-	UrlRelativePath string `yaml:"urlRelativePath"`
+	URLPrefix       string `yaml:"urlPrefix"`
+	URLRelativePath string `yaml:"urlRelativePath"`
 }
 
 type logConfig struct {
@@ -36,9 +38,15 @@ type mySQLConfig struct {
 	PoolLimit int    `yaml:"poolLimit"`
 }
 
+type authConfig struct {
+	SignKey        string `yaml:"signKey"`
+	CRTPath        string `yaml:"CRTPath"`
+	PrivateKeyPath string `yaml:"privateKeyPath"`
+}
+
 var defaultIns config
 
-//初始化
+//Init 初始化
 func Init() error {
 	return defaultIns.init()
 }
@@ -52,91 +60,111 @@ func (c *config) init() error {
 	return yaml.Unmarshal(f, &defaultIns)
 }
 
-//日志按照大小切割
+//LogSize 设置日志按照大小切割
 func LogSize() int64 {
 	return defaultIns.Log.Size
 }
 
-//日志按照日期切割
+//LogDateFlag 设置日志按照日期切割
 func LogDateFlag() bool {
 	return defaultIns.Log.DateFlag
 }
 
-//日志路径
+//LogPath 设置日志路径
 func LogPath() string {
 	return defaultIns.Log.Path
 }
 
-//日志文件名
+//LogFileName 设置日志文件名
 func LogFileName() string {
 	return defaultIns.Log.Name
 }
 
-//日志压缩标识
+//LogCompressFlag 设置日志压缩标识
+//如果设置该标识，分割文件的同时压缩文件
 func LogCompressFlag() bool {
 	return defaultIns.Log.CompressFlag
 }
 
+//LogLevel 设置日志等级
 func LogLevel() string {
 	return defaultIns.Log.Level
 }
 
-//监听端口
+//ListenPort 获得服务监听端空监听端口
 func ListenPort() int {
 	return defaultIns.Port
 }
 
-//发布模式标签
+//ListenTLSPort 获得TLS 监听端口
+func ListenTLSPort() int {
+	return defaultIns.TLSPort
+}
+
+//ReleaseFlag 获得Go gin 发布模式标签
 func ReleaseFlag() bool {
 	return defaultIns.ReleaseFlag
 }
 
-//图片存放地址
+//PicSavePath 获得上传图片存放路径
 func PicSavePath() string {
 	return defaultIns.Picture.SavePath
 }
 
-//图片URL 前缀
-func PicUrlPrefix() string {
-	return defaultIns.Picture.UrlPrefix
+//PicURLPrefix 获得图片URL 前缀
+func PicURLPrefix() string {
+	return defaultIns.Picture.URLPrefix
 }
 
-//图片URL相对地址
-func PicUrlRelativePath() string {
-	return defaultIns.Picture.UrlRelativePath
+//PicURLRelativePath 获得图片URL相对地址
+func PicURLRelativePath() string {
+	return defaultIns.Picture.URLRelativePath
 }
 
-//db 地址
+//MySQLAddr 获得MysqlDB地址
 func MySQLAddr() string {
 	return defaultIns.MySQL.Addr
 }
 
-//返回mySQLDB数据库用户名
+//MySQLUser 获得MySQLDB数据库用户名
 func MySQLUser() string {
 	return defaultIns.MySQL.User
 }
 
-//db 密码
+//MySQLPassword 获得MySQL DB 密码
 func MySQLPassword() string {
 	return defaultIns.MySQL.Password
 }
 
-//db 连接数
+//MySQLPoolLimit 获得MySQL 连接数
 func MySQLPoolLimit() int {
 	return defaultIns.MySQL.PoolLimit
 }
 
+//MySQLDBName 获得MySQL DB名称
 func MySQLDBName() string {
 	return defaultIns.MySQL.Name
 }
 
-//设置图片的绝对路径
+//图片的绝对路径
 var picturePath string
 
+//GetPicPath 获得图片的绝对存储路径
 func GetPicPath() string {
 	return picturePath
 }
 
+//SetPicPath 设置图片的存储的绝对的路径
 func SetPicPath(path string) {
 	picturePath = path
+}
+
+// CRTPath 获得证书路径
+func CRTPath() string {
+	return defaultIns.Auth.CRTPath
+}
+
+// PrivateKeyPath 获得私钥路径
+func PrivateKeyPath() string {
+	return defaultIns.Auth.PrivateKeyPath
 }

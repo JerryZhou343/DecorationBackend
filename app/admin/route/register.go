@@ -5,9 +5,8 @@ import (
 	. "github.com/mfslog/DecorationBackend/app/admin/controller"
 )
 
-func RegisterRouter(r *gin.Engine) {
-
-	r.POST("/login", Login)
+//RegisterHTTPRouter 注册admin app HTTP 路由
+func RegisterHTTPRouter(r *gin.Engine) {
 
 	mgt := r.Group("/mgt/")
 	//admin.Use(jwtauth.JWTAuth())
@@ -44,4 +43,10 @@ func RegisterRouter(r *gin.Engine) {
 		mgt.GET("case_category/:id", GetCaseCategory)
 	}
 
+}
+
+//RegisterHTTPSRouter 注册 admin app HTTPS 路由
+func RegisterHTTPSRouter(r *gin.Engine) {
+
+	r.POST("/login", Login)
 }

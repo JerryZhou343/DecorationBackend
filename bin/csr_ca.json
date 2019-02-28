@@ -1,0 +1,16 @@
+{
+  "CN": "Private CA",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+    "names": [
+       {
+         "C": "CHINA",
+         "L": "Shen Zhen",
+         "O": "Private CA Company",
+         "OU": "CA Services",
+         "ST": "Guan Dong"
+       }
+    ]
+}

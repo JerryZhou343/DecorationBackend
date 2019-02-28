@@ -1,4 +1,4 @@
-package gin_engine
+package engine
 
 import (
 	"github.com/gin-gonic/gin"
@@ -8,16 +8,19 @@ import (
 	"net/http"
 )
 
-func Init() *gin.Engine {
-	r := gin.Default()
+//Init 初始化go-gin 路由,返回 httpRouter, httpsRouter
+func Init() (httpRouter *gin.Engine, httpsRouter *gin.Engine) {
+	httpRouter = gin.Default()
+	httpsRouter = gin.Default()
 	if config.ReleaseFlag() {
 		gin.SetMode(gin.ReleaseMode)
 	}
-
 	//图片URL
-	r.StaticFS(config.PicUrlRelativePath(), http.Dir(config.GetPicPath()))
-	er.RegisterRouter(r)
-	ar.RegisterRouter(r)
+	httpRouter.StaticFS(config.PicURLRelativePath(), http.Dir(config.GetPicPath()))
+	er.RegisterHTTPRouter(httpRouter)
 
-	return r
+	ar.RegisterHTTPRouter(httpRouter)
+	ar.RegisterHTTPSRouter(httpsRouter)
+
+	return httpRouter, httpsRouter
 }

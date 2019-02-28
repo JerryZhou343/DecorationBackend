@@ -1,0 +1,21 @@
+{
+    "CN":"decoration website",
+    "hosts":[
+        "127.0.0.1",
+        "www.decoration.com",
+        "localhost"
+            ],
+    "key":{
+        "algo":"rsa",
+        "size":2048
+    },
+    "names":[
+        {
+            "C":"CN",
+            "ST":"BeiJing",
+            "L":"BeiJing",
+            "O":"decoration",
+            "OU":"System"
+        }
+    ]
+}

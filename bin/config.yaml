@@ -1,4 +1,5 @@
 port: 8081 #监听端空
+TLSPort: 443
 releaseFlag: false # release 标签
 
 picture:
@@ -20,3 +21,8 @@ mySQL:
   user: root # 数据用户名，上线必须修改
   password: 123456 #  数据库密码，上线必须修改
   poolLimit: 32 # 数据链接数限制
+
+auth:
+  signKey: JerrySignedKey
+  CRTPath: decoration.pem #证书路径
+  privateKeyPath: decoration-key.pem #私钥路径

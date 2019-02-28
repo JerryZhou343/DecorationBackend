@@ -6,6 +6,6 @@ import (
 )
 
 func GetPicFullUrl(path string) string {
-	relativePath := strings.Trim(config.PicUrlRelativePath(), "/")
-	return config.PicUrlPrefix() + "/" + relativePath + "/" + path
+	relativePath := strings.Trim(config.PicURLRelativePath(), "/")
+	return config.PicURLPrefix() + "/" + relativePath + "/" + path
 }
