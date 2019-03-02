@@ -2,23 +2,24 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/mfslog/DecorationBackend/form"
 	"github.com/mfslog/DecorationBackend/db"
+	"github.com/mfslog/DecorationBackend/form"
 	"github.com/mfslog/DecorationBackend/models"
 	"github.com/sirupsen/logrus"
 	"net/http"
 	"strconv"
 )
 
+//GetCase handler 获得一个case
 func GetCase(c *gin.Context) {
-	caseIdStr := c.Param("id")
-	caseId, err := strconv.Atoi(caseIdStr)
+	caseIDStr := c.Param("id")
+	caseID, err := strconv.Atoi(caseIDStr)
 	if err != nil {
 		c.Status(http.StatusBadRequest)
 		return
 	}
 	var caseObj *models.TCase
-	caseObj, err = models.GetCaseById(caseId)
+	caseObj, err = models.GetCaseByID(caseID)
 	if err != nil {
 		c.Status(http.StatusInternalServerError)
 		return
@@ -30,7 +31,7 @@ func GetCase(c *gin.Context) {
 	}
 
 	ret := form.ComplexCaseCategory{}
-	ret.CaseInfo.Id = caseObj.Id
+	ret.CaseInfo.ID = caseObj.ID
 	ret.CaseInfo.Name = caseObj.Name
 	ret.CaseInfo.Type = caseObj.Type
 	ret.CaseInfo.PhoneNumber = caseObj.PhoneNumber
@@ -38,15 +39,15 @@ func GetCase(c *gin.Context) {
 	ret.CaseInfo.Price = caseObj.Price
 	ret.CaseInfo.Addr = caseObj.Addr
 	var categoryRet *[]*models.TCaseCategory
-	categoryRet, err = models.GetCategoryByCaseId(ret.CaseInfo.Id)
+	categoryRet, err = models.GetCategoryByCaseID(ret.CaseInfo.ID)
 	if err != nil {
 		c.Status(http.StatusInternalServerError)
 		return
 	}
 	for _, item := range *categoryRet {
 		tmp := form.CaseCategory{}
-		tmp.CategoryId = item.CategoryId
-		tmp.RId = item.Id
+		tmp.CategoryID = item.CategoryID
+		tmp.RID = item.ID
 
 		ret.CategoryInfo = append(ret.CategoryInfo, tmp)
 	}
@@ -55,14 +56,15 @@ func GetCase(c *gin.Context) {
 	return
 }
 
+//DelCase 逻辑删除一个case
 func DelCase(c *gin.Context) {
-	caseIdStr := c.Param("id")
-	caseId, err := strconv.Atoi(caseIdStr)
+	caseIDStr := c.Param("id")
+	caseID, err := strconv.Atoi(caseIDStr)
 	if err != nil {
 		c.Status(http.StatusBadRequest)
 		return
 	}
-	err = models.DelCaseById(caseId)
+	err = models.DelCaseByID(caseID)
 	if err != nil {
 		c.Status(http.StatusInternalServerError)
 	}
@@ -70,11 +72,12 @@ func DelCase(c *gin.Context) {
 	c.Status(http.StatusOK)
 }
 
+//UpdateCaseInfo 更新case信息
 func UpdateCaseInfo(c *gin.Context) {
-	caseIdStr := c.Param("id")
+	caseIDStr := c.Param("id")
 	caseInfo := form.Case{}
 
-	caseId, err := strconv.Atoi(caseIdStr)
+	caseID, err := strconv.Atoi(caseIDStr)
 	if err != nil {
 		c.Status(http.StatusBadRequest)
 		return
@@ -94,7 +97,7 @@ func UpdateCaseInfo(c *gin.Context) {
 	tcase.OwnerName = caseInfo.OwnerName
 	tcase.Type = caseInfo.Type
 
-	err = models.UpdateCase(caseId, &tcase)
+	err = models.UpdateCaseByID(caseID, &tcase)
 	if err != nil {
 		c.Status(http.StatusInternalServerError)
 		return
@@ -103,7 +106,7 @@ func UpdateCaseInfo(c *gin.Context) {
 	return
 }
 
-//TODO 重构
+//CreateCase 创建一个case对象
 func CreateCase(c *gin.Context) {
 
 	info := form.ComplexCaseCategory{}
@@ -128,12 +131,12 @@ func CreateCase(c *gin.Context) {
 		goto FAILED
 	}
 
-	logrus.Infof("insert case id is %d", dbCase.Id)
+	logrus.Infof("insert case id is %d", dbCase.ID)
 
 	for _, item := range info.CategoryInfo {
 		category := models.TCaseCategory{}
-		category.CaseId = dbCase.Id
-		category.CategoryId = item.CategoryId
+		category.CaseID = dbCase.ID
+		category.CategoryID = item.CategoryID
 		categorys = append(categorys, category)
 	}
 	cnt, err = engine.Insert(categorys)

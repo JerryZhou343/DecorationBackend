@@ -8,9 +8,10 @@ import (
 	"strconv"
 )
 
+//AddCaseCategory 添加一个分类
 func AddCaseCategory(c *gin.Context) {
-	caseIdStr := c.Param("id")
-	caseId, err := strconv.Atoi(caseIdStr)
+	caseIDStr := c.Param("id")
+	caseID, err := strconv.Atoi(caseIDStr)
 	if err != nil {
 		c.Status(http.StatusBadRequest)
 		return
@@ -24,8 +25,8 @@ func AddCaseCategory(c *gin.Context) {
 
 	//todo:校验category 是否存在
 	tcategory := models.TCaseCategory{}
-	tcategory.CategoryId = categoryInfo.CategoryId
-	tcategory.Id = caseId
+	tcategory.CategoryID = categoryInfo.CategoryID
+	tcategory.ID = caseID
 
 	err = models.InsertOneCaseCategory(&tcategory)
 	if err == nil {
@@ -37,20 +38,21 @@ func AddCaseCategory(c *gin.Context) {
 	return
 }
 
+//GetCaseCategory  获得一个case的分类
 func GetCaseCategory(c *gin.Context) {
-	caseIdStr := c.Param("id")
-	caseId, err := strconv.Atoi(caseIdStr)
+	caseIDStr := c.Param("id")
+	caseID, err := strconv.Atoi(caseIDStr)
 	if err != nil {
 		c.Status(http.StatusBadRequest)
 		return
 	}
 
-	ret, err := models.GetCategoryByCaseId(caseId)
+	ret, err := models.GetCategoryByCaseID(caseID)
 	result := []form.CaseCategory{}
 	for _, item := range *ret {
 		tmp := form.CaseCategory{}
-		tmp.CategoryId = item.CategoryId
-		tmp.RId = item.Id
+		tmp.CategoryID = item.CategoryID
+		tmp.RID = item.ID
 
 		result = append(result, tmp)
 	}
@@ -58,23 +60,24 @@ func GetCaseCategory(c *gin.Context) {
 	c.JSON(http.StatusOK, result)
 }
 
+//DelCaseCategory 删除一个case的分类
 func DelCaseCategory(c *gin.Context) {
-	caseIdStr := c.Param("id")
-	caseId, err := strconv.Atoi(caseIdStr)
+	caseIDStr := c.Param("id")
+	caseID, err := strconv.Atoi(caseIDStr)
 	if err != nil {
 		c.Status(http.StatusBadRequest)
 		return
 	}
 
-	categoryIdStr := c.Query("category_id")
-	categoryId, err := strconv.Atoi(categoryIdStr)
+	categoryIDStr := c.Query("category_id")
+	categoryID, err := strconv.Atoi(categoryIDStr)
 
 	if err != nil {
 		c.Status(http.StatusBadRequest)
 		return
 	}
 
-	err = models.DelCaseCategoryById(caseId, categoryId)
+	err = models.DelCaseCategoryByID(caseID, categoryID)
 
 	if err != nil {
 		c.Status(http.StatusBadRequest)

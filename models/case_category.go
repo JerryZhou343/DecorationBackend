@@ -2,16 +2,18 @@ package models
 
 import "github.com/mfslog/DecorationBackend/db"
 
+//TCaseCategory 案例分类表定义
 type TCaseCategory struct {
-	Id         int `xorm:"pk autoincr`
-	CaseId     int
-	CategoryId int
+	ID         int `xorm:"'id' pk autoincr`
+	CaseID     int `xorm:"'case_id'"`
+	CategoryID int `xorm:"'category_id'"`
 	Created    int `xorm:"created"`
 	Updated    int `xorm:"updated"`
 	State      int
 }
 
-func GetCategoryByCaseId(id int) (*[]*TCaseCategory, error) {
+//GetCategoryByCaseID 通过case ID 查询对应case的分类信息
+func GetCategoryByCaseID(id int) (*[]*TCaseCategory, error) {
 	engine := db.DB()
 	ret := []*TCaseCategory{}
 	err := engine.Where("case_id=?", id).Find(&ret)
@@ -19,6 +21,7 @@ func GetCategoryByCaseId(id int) (*[]*TCaseCategory, error) {
 	return &ret, err
 }
 
+//InsertOneCaseCategory 插入一个case分类
 func InsertOneCaseCategory(category *TCaseCategory) error {
 	engine := db.DB()
 	cnt, err := engine.InsertOne(category)
@@ -29,11 +32,12 @@ func InsertOneCaseCategory(category *TCaseCategory) error {
 	return nil
 }
 
-func DelCaseCategoryById(caseId, categoryId int) error {
+// DelCaseCategoryByID 删除对应case和对应的category
+func DelCaseCategoryByID(caseID, categoryID int) error {
 	engine := db.DB()
 
-	_, err := engine.Where("case_id", caseId).
-		Where("category_id", categoryId).
+	_, err := engine.Where("case_id", caseID).
+		Where("category_id", categoryID).
 		Update(TCaseCategory{
 			State: 0,
 		})

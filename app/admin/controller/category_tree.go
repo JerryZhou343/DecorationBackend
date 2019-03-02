@@ -9,19 +9,21 @@ import (
 	"strconv"
 )
 
+//GetCategoryTree 获得一个分类子树，传入的节点ID 作为父节点ID
+//查询返回其第一层子节点
 func GetCategoryTree(c *gin.Context) {
-	parentIdStr := c.Param("parent_id")
-	var parentId int
+	parentIDStr := c.Param("parent_id")
+	var parentID int
 	var err error
 	var result []form.Category
 	var dbRet []models.TCategory
 
-	parentId, err = strconv.Atoi(parentIdStr)
-	if err != nil || parentId == 0 {
+	parentID, err = strconv.Atoi(parentIDStr)
+	if err != nil || parentID == 0 {
 		logrus.Error("prament zero")
 		goto FAILED
 	}
-	dbRet, err = models.GetChildCategoryByParentId(parentId)
+	dbRet, err = models.GetChildCategoryByParentID(parentID)
 	if err != nil {
 		//TODO:记录错误原因
 		logrus.Errorf("%v\n", err)
@@ -29,10 +31,10 @@ func GetCategoryTree(c *gin.Context) {
 	}
 	for _, itr := range dbRet {
 		category := form.Category{}
-		category.Id = itr.Id
+		category.ID = itr.ID
 		category.Name = itr.Name
 		category.Priority = itr.Priority
-		category.ParentId = parentId
+		category.ParentID = parentID
 		result = append(result, category)
 	}
 

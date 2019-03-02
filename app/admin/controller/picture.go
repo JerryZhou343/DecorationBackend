@@ -13,16 +13,16 @@ import (
 	"strings"
 )
 
-//获得一张图片
+//GetPicture 获得一张图片
 func GetPicture(c *gin.Context) {
-	picIdStr := c.Param("id")
-	picId, err := strconv.Atoi(picIdStr)
+	picIDStr := c.Param("id")
+	picID, err := strconv.Atoi(picIDStr)
 	if err != nil {
 		c.Status(http.StatusBadRequest)
 		return
 	}
 
-	picInfo, err := models.GetPictureById(picId)
+	picInfo, err := models.GetPictureByID(picID)
 	if err != nil {
 		c.Status(http.StatusBadRequest)
 		return
@@ -34,19 +34,19 @@ func GetPicture(c *gin.Context) {
 	}
 
 	formInfo := form.Picture{
-		PicId:  picId,
+		PicID:  picID,
 		Name:   picInfo.Name,
 		Remark: picInfo.Remark,
-		Addr:   util.GetPicFullUrl(picInfo.Addr),
+		Addr:   util.GetPicFullURL(picInfo.Addr),
 	}
 
 	c.JSON(http.StatusOK, formInfo)
 }
 
-//添加一张图片
+//CreatePicture 添加一张图片
 func CreatePicture(c *gin.Context) {
-	caseIdStr := c.PostForm("caseId")
-	caseId, err := strconv.Atoi(caseIdStr)
+	caseIDStr := c.PostForm("caseID")
+	caseID, err := strconv.Atoi(caseIDStr)
 	if err != nil {
 		c.Status(http.StatusBadRequest)
 		return
@@ -71,7 +71,7 @@ func CreatePicture(c *gin.Context) {
 		return
 	}
 	suffix := nameSlice[(len(nameSlice) - 1)]
-	md5Value := util.GetMD5(caseIdStr + picName)
+	md5Value := util.GetMD5(caseIDStr + picName)
 	fileName := md5Value + "." + suffix
 	absFileName := config.GetPicPath() + "/" + fileName
 	relativePath := fileName
@@ -103,7 +103,7 @@ func CreatePicture(c *gin.Context) {
 	picInfo.Addr = relativePath
 	picInfo.Name = name
 	picInfo.Remark = remark
-	picInfo.CaseId = caseId
+	picInfo.CaseID = caseID
 
 	err = models.InsertOnePicture(&picInfo)
 	if err != nil {
@@ -115,28 +115,28 @@ func CreatePicture(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"code":   http.StatusOK,
 		"msg":    "success",
-		"imgUrl": util.GetPicFullUrl(relativePath),
+		"imgUrl": util.GetPicFullURL(relativePath),
 	})
 }
 
-//软删除图片
+//DelPicture 软删除图片
 func DelPicture(c *gin.Context) {
-	picIdStr := c.Param("id")
-	picId, err := strconv.Atoi(picIdStr)
+	picIDStr := c.Param("id")
+	picID, err := strconv.Atoi(picIDStr)
 	if err != nil {
 		c.Status(http.StatusBadRequest)
 		return
 	}
 
-	models.GetCategoryByCaseId(picId)
+	models.GetCategoryByCaseID(picID)
 
 	c.Status(http.StatusOK)
 }
 
-//更新图片的描述信息
+//UpdatePicture 更新图片的描述信息
 func UpdatePicture(c *gin.Context) {
-	picIdStr := c.Param("id")
-	picId, err := strconv.Atoi(picIdStr)
+	picIDStr := c.Param("id")
+	picID, err := strconv.Atoi(picIDStr)
 	if err != nil {
 		c.Status(http.StatusBadRequest)
 		return
@@ -148,7 +148,7 @@ func UpdatePicture(c *gin.Context) {
 		Name:   info.Name,
 		Remark: info.Remark,
 	}
-	err = models.UpdateOnePicture(picId, &picInfo)
+	err = models.UpdateOnePicture(picID, &picInfo)
 	if err != nil {
 		c.Status(http.StatusBadRequest)
 		return

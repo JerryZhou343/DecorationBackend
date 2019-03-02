@@ -16,3 +16,4 @@ go.sum
 log
 pic
 upload
+.DS_Store

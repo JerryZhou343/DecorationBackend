@@ -4,28 +4,29 @@ import (
 	"github.com/mfslog/DecorationBackend/db"
 )
 
+//TCategory 分类表
 type TCategory struct {
-	Id         int    `xorm:"pk autoincr"`
+	ID         int    `xorm:"pk autoincr"`
 	Name       string `xorm:"varchar(64)"`
-	ParentId   int
+	ParentID   int    `xorm:"'parent_id'"`
 	Priority   int
 	State      int    `xorm:"default 1"`
 	Remark     string `xorm:"varchar(200)"`
 	Created    int    `xorm:"created"`
 	Updated    int    `xorm:"updated"`
-	OperatorId int
+	OperatorID int    `xorm:"'operator_id'"`
 }
 
-//查询以该分类为父分类的子分类
-func GetChildCategoryByParentId(pid int) ([]TCategory, error) {
+//GetChildCategoryByParentID 查询以该分类为父分类的子分类
+func GetChildCategoryByParentID(pid int) ([]TCategory, error) {
 	engine := db.DB()
 	result := []TCategory{}
 	err := engine.Where("parent_id=?", pid).Find(&result)
 	return result, err
 }
 
-//查询分类信息
-func GetCategoryById(id int) (*TCategory, error) {
+//GetCategoryByID 查询分类信息
+func GetCategoryByID(id int) (*TCategory, error) {
 	engine := db.DB()
 	result := TCategory{}
 	_, err := engine.Where("id=?", id).Get(&result)
@@ -33,7 +34,7 @@ func GetCategoryById(id int) (*TCategory, error) {
 	return &result, err
 }
 
-//插入一条分类信息
+//InsertCategory 插入一条分类信息
 func InsertCategory(category *TCategory) error {
 	engine := db.DB()
 	cnt, err := engine.InsertOne(category)
@@ -45,7 +46,7 @@ func InsertCategory(category *TCategory) error {
 
 }
 
-//更新一条分类信息
+//UpdateCategoryInfo 更新一条分类信息
 func UpdateCategoryInfo(id int, category *TCategory) error {
 	engine := db.DB()
 
@@ -58,7 +59,7 @@ func UpdateCategoryInfo(id int, category *TCategory) error {
 	return nil
 }
 
-//删除一条分类信息
+//DelCategory 删除一条分类信息
 func DelCategory(id int) error {
 	engine := db.DB()
 	tmp := TCategory{

@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-//TODO:TLS
+//Login 登录接口
 func Login(c *gin.Context) {
 	info := form.Login{}
 	c.BindJSON(&info)
@@ -25,6 +25,7 @@ func Login(c *gin.Context) {
 
 }
 
+//UpdatePwd 修改密码接口
 //TODO:增加修改密码接口
 func UpdatePwd(c *gin.Context) {
 

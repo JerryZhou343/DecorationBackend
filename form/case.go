@@ -1,14 +1,16 @@
 package form
 
+//CaseCategory 案例类型定义，和客户端交换数据模型
 type CaseCategory struct {
-	RId          int    `json:"rid"`
-	CategoryId   int    `json:"categoryId"`
+	RID          int    `json:"RID"`
+	CategoryID   int    `json:"categoryID"`
 	CategoryName string `json:"categoryName"`
-	CaseId       int    `json:"caseId"`
+	CaseID       int    `json:"caseID"`
 }
 
+//Case 案例定义，和浏览器交换数据模型定义
 type Case struct {
-	Id          int    `json:"id"`
+	ID          int    `json:"id"`
 	Name        string `json:"name"`
 	Price       int    `json:"price"`
 	Type        int    `json:"type"`
@@ -17,6 +19,7 @@ type Case struct {
 	Addr        string `json:"addr"`
 }
 
+//ComplexCaseCategory 复合类型，包含案例信息和案例分类信息
 type ComplexCaseCategory struct {
 	CaseInfo     Case           `json:"caseInfo"`
 	CategoryInfo []CaseCategory `json:"categoryInfo"`

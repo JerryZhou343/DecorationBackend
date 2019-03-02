@@ -1,9 +1,10 @@
 package form
 
+//Category 分类信息
 type Category struct {
-	Id       int    `json:"id"`
+	ID       int    `json:"id"`
 	Name     string `json:"name"`
 	Priority int    `json:"priority"`
-	ParentId int    `json:"parentId"`
+	ParentID int    `json:"parentId"`
 	Remark   string `json:"remark"`
 }

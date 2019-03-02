@@ -11,7 +11,8 @@ import (
 	"unsafe"
 )
 
-type logIO struct {
+//LogIO 日志输出的IO对象定义
+type LogIO struct {
 	curFile      *os.File
 	fileName     string
 	sizeFlag     bool
@@ -25,10 +26,12 @@ type logIO struct {
 	cnt          int
 }
 
-type option func(*logIO)
+//Option 日志配置函数签名定义
+type Option func(*LogIO)
 
-func NewLogFile(opts ...option) *logIO {
-	IOIns := logIO{
+//NewLogFile 创建新的日志文件
+func NewLogFile(opts ...Option) *LogIO {
+	IOIns := LogIO{
 		curFile:      os.Stdout,
 		fileName:     "",
 		sizeFlag:     false,
@@ -64,53 +67,53 @@ func NewLogFile(opts ...option) *logIO {
 	return &IOIns
 }
 
-//设置文件名
-func FileName(fileName string) option {
-	return func(o *logIO) {
+//FileName 设置文件名
+func FileName(fileName string) Option {
+	return func(o *LogIO) {
 		o.fileName = fileName
 	}
 }
 
-//设置文件路径
-func FilePath(path string) option {
-	return func(o *logIO) {
-		var slash string = string(os.PathSeparator)
+//FilePath 设置文件路径
+func FilePath(path string) Option {
+	return func(o *LogIO) {
+		var slash = string(os.PathSeparator)
 		dir, _ := filepath.Abs(path)
 		o.filePath = dir + slash
 	}
 }
 
-//设置文件切割大小,单位为M
-func FileSize(size int64) option {
-	return func(o *logIO) {
+//FileSize 设置文件切割大小,单位为M
+func FileSize(size int64) Option {
+	return func(o *LogIO) {
 		o.sizeFlag = true
 		o.sizeValue = size * 1024 * 1024
 	}
 }
 
-//按照天来切割
-func FileDate(flag bool) option {
-	return func(o *logIO) {
+//FileDate 按照天来切割
+func FileDate(flag bool) Option {
+	return func(o *LogIO) {
 		o.dateFlag = flag
 	}
 }
 
-//设置压缩标志
-func FileCompress(flag bool) option {
-	return func(o *logIO) {
+//FileCompress 设置压缩标志
+func FileCompress(flag bool) Option {
+	return func(o *LogIO) {
 		o.compressFlag = flag
 	}
 }
 
-//向IO 输出
-func (log *logIO) Write(p []byte) (n int, err error) {
+//Write 向IO 输出内容，实现Writer接口
+func (log *LogIO) Write(p []byte) (n int, err error) {
 	str := (*string)(unsafe.Pointer(&p))
 	log.msgQueue <- (*str)
 	return len(p), nil
 }
 
-//切割文件
-func (log *logIO) doRotate() {
+//doRotate 切割文件
+func (log *LogIO) doRotate() {
 
 	defer func() {
 		rec := recover()
@@ -126,7 +129,7 @@ func (log *logIO) doRotate() {
 
 	prefile := log.curFile
 	_, err := prefile.Stat()
-	var prefileName string = ""
+	var prefileName = ""
 	if err == nil {
 		filePath := log.filePath + log.fileName
 		log.closed = true
@@ -136,7 +139,7 @@ func (log *logIO) doRotate() {
 		}
 		y, m, d := time.Now().Date()
 		prefileName = filePath + "." + fmt.Sprintf("%.4d%.2d%.2d", y, m, d) + strconv.Itoa(log.cnt)
-		log.cnt += 1
+		log.cnt++
 		err = os.Rename(filePath, prefileName)
 	}
 
@@ -157,8 +160,8 @@ func (log *logIO) doRotate() {
 	}
 }
 
-//输出文件
-func (log *logIO) worker() {
+//worker 输出内容到文件
+func (log *LogIO) worker() {
 	for {
 		select {
 		case msg := <-log.msgQueue:
@@ -185,8 +188,8 @@ func (log *logIO) worker() {
 
 }
 
-//压缩日志文件
-func (f *logIO) compressFile(Src string, Dst string) error {
+//compressFile 压缩日志文件
+func (log *LogIO) compressFile(Src string, Dst string) error {
 	defer func() {
 		rec := recover()
 		if rec != nil {
@@ -227,7 +230,7 @@ func (f *logIO) compressFile(Src string, Dst string) error {
 	return nil
 }
 
-//格式化年月日
+//getCurrentDate 格式化年月日
 func getCurrentDate() string {
 	year, month, day := time.Now().Date()
 	return fmt.Sprintf("%.4d%.2d%.2d", year, month, day)

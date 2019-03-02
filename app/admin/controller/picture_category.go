@@ -8,41 +8,43 @@ import (
 	"strconv"
 )
 
+//GetPicCategory 获得图片的分类
 func GetPicCategory(c *gin.Context) {
 
-	picIdStr := c.Param("id")
-	picId, err := strconv.Atoi(picIdStr)
+	picIDStr := c.Param("id")
+	picID, err := strconv.Atoi(picIDStr)
 	if err != nil {
 		c.Status(http.StatusBadRequest)
 		return
 	}
 
-	ret, err := models.GetPicCategory(picId)
+	ret, err := models.GetPicCategory(picID)
 	categoryInfo := []form.PicCategory{}
 	for _, item := range *ret {
 		tmp := form.PicCategory{}
-		tmp.CategoryId = item.CategoryId
+		tmp.CategoryID = item.CategoryID
 		categoryInfo = append(categoryInfo, tmp)
 	}
 
 	c.JSON(http.StatusOK, categoryInfo)
 }
 
+//DelPicCategory 删除图片的分类
 func DelPicCategory(c *gin.Context) {
-	picIdStr := c.Param("id")
-	picId, err := strconv.Atoi(picIdStr)
+	picIDStr := c.Param("id")
+	picID, err := strconv.Atoi(picIDStr)
 	if err != nil {
 		c.Status(http.StatusBadRequest)
 		return
 	}
 
-	categoryIdStr := c.Param("category_id")
-	categoryId, err := strconv.Atoi(categoryIdStr)
+	categoryIDStr := c.Param("category_id")
+	categoryID, err := strconv.Atoi(categoryIDStr)
 	if err != nil {
 		c.Status(http.StatusBadRequest)
 		return
 	}
-	err = models.DelPicCategory(picId, categoryId)
+	err = models.DelPicCategory(picID, categoryID)
 	if err != nil {
 		c.Status(http.StatusInternalServerError)
 		return
@@ -51,21 +53,22 @@ func DelPicCategory(c *gin.Context) {
 	c.Status(http.StatusOK)
 }
 
+//AddPicCategory 添加图片分类
 func AddPicCategory(c *gin.Context) {
-	picIdStr := c.Param("id")
-	picId, err := strconv.Atoi(picIdStr)
+	picIDStr := c.Param("id")
+	picID, err := strconv.Atoi(picIDStr)
 	if err != nil {
 		c.Status(http.StatusBadRequest)
 		return
 	}
 
-	categoryIdStr := c.Param("category_id")
-	categoryId, err := strconv.Atoi(categoryIdStr)
+	categoryIDStr := c.Param("category_id")
+	categoryID, err := strconv.Atoi(categoryIDStr)
 	if err != nil {
 		c.Status(http.StatusBadRequest)
 		return
 	}
-	err = models.InsertOnePicCategory(picId, categoryId)
+	err = models.InsertOnePicCategory(picID, categoryID)
 	if err != nil {
 		c.Status(http.StatusInternalServerError)
 		return

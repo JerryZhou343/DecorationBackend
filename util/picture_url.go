@@ -5,7 +5,8 @@ import (
 	"strings"
 )
 
-func GetPicFullUrl(path string) string {
+//GetPicFullURL 获得图片的完整URL 路径
+func GetPicFullURL(path string) string {
 	relativePath := strings.Trim(config.PicURLRelativePath(), "/")
 	return config.PicURLPrefix() + "/" + relativePath + "/" + path
 }

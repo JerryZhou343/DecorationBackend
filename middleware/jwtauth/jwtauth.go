@@ -9,6 +9,8 @@ import (
 	"time"
 )
 
+// JWTAuth json web token
+//gin 中间间，用于在分组路由中校验请求是否带有token
 func JWTAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.DefaultQuery("token", "")
@@ -35,18 +37,25 @@ func JWTAuth() gin.HandlerFunc {
 	}
 }
 
+//JWT jwt对象定义，含有jwt需要的签名KEY
 type JWT struct {
 	SigningKey []byte
 }
 
 var (
-	TokenExpired     error  = errors.New("Token is expired")
-	TokenNotValidYet error  = errors.New("Token not active yet")
-	TokenMalformed   error  = errors.New("That's not even a token")
-	TokenInvalid     error  = errors.New("Couldn't handle this token:")
-	SignKey          string = "test"
+	//ErrTokenExpired token 已经过期
+	ErrTokenExpired = errors.New("Token is expired")
+	//ErrTokenNotValidYet token不可用
+	ErrTokenNotValidYet = errors.New("Token not active yet")
+	//ErrTokenMalformed token不合法
+	ErrTokenMalformed = errors.New("That's not even a token")
+	//ErrTokenInvalid token 不可用
+	ErrTokenInvalid = errors.New("Couldn't handle this token")
+	//SignKey  签名key
+	SignKey = "test"
 )
 
+//CustomClaims 用户关键信息
 type CustomClaims struct {
 	ID    int    `json:"id"`
 	Name  string `json:"name"`
@@ -54,22 +63,31 @@ type CustomClaims struct {
 	jwt.StandardClaims
 }
 
+//NewJWT 生成一个新的json web token
 func NewJWT() *JWT {
 	return &JWT{
 		[]byte(GetSignKey()),
 	}
 }
+
+//GetSignKey 返回签名Key
 func GetSignKey() string {
 	return SignKey
 }
+
+//SetSignKey 设置签名KEY
 func SetSignKey(key string) string {
 	SignKey = key
 	return SignKey
 }
+
+//CreateToken 创建一个token
 func (j *JWT) CreateToken(claims CustomClaims) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString(j.SigningKey)
 }
+
+//ParseToken token逆转，获得用户信息
 func (j *JWT) ParseToken(tokenString string) (*CustomClaims, error) {
 	token, err := jwt.ParseWithClaims(tokenString, &CustomClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return j.SigningKey, nil
@@ -93,6 +111,8 @@ func (j *JWT) ParseToken(tokenString string) (*CustomClaims, error) {
 	}
 	return nil, TokenInvalid
 }
+
+//RefreshToken  刷新Token
 func (j *JWT) RefreshToken(tokenString string) (string, error) {
 	jwt.TimeFunc = func() time.Time {
 		return time.Unix(0, 0)
