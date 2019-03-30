@@ -15,18 +15,22 @@ func GetCase(c *gin.Context) {
 	caseIDStr := c.Param("id")
 	caseID, err := strconv.Atoi(caseIDStr)
 	if err != nil {
-		c.Status(http.StatusBadRequest)
+		//c.Status(http.StatusBadRequest)
+		FailedByParam(c)
 		return
 	}
 	var caseObj *models.TCase
 	caseObj, err = models.GetCaseByID(caseID)
 	if err != nil {
-		c.Status(http.StatusInternalServerError)
+		//c.Status(http.StatusInternalServerError)
+		FailedByOp(c)
+		logrus.Errorf("gin: [%+v], error: [%v] ", c, err)
 		return
 	}
 
 	if caseObj == nil {
-		c.Status(http.StatusNoContent)
+		//c.Status(http.StatusNoContent)
+		FailedByNotFound(c)
 		return
 	}
 
@@ -41,7 +45,9 @@ func GetCase(c *gin.Context) {
 	var categoryRet *[]*models.TCaseCategory
 	categoryRet, err = models.GetCategoryByCaseID(ret.CaseInfo.ID)
 	if err != nil {
-		c.Status(http.StatusInternalServerError)
+		//c.Status(http.StatusInternalServerError)
+		FailedByOp(c)
+		logrus.Errorf("gin: [%+v], error: [%v]", c, err)
 		return
 	}
 	for _, item := range *categoryRet {
@@ -52,7 +58,7 @@ func GetCase(c *gin.Context) {
 		ret.CategoryInfo = append(ret.CategoryInfo, tmp)
 	}
 
-	c.JSON(http.StatusOK, ret)
+	Success(c, ret)
 	return
 }
 
@@ -61,15 +67,20 @@ func DelCase(c *gin.Context) {
 	caseIDStr := c.Param("id")
 	caseID, err := strconv.Atoi(caseIDStr)
 	if err != nil {
-		c.Status(http.StatusBadRequest)
+		//c.Status(http.StatusBadRequest)
+		FailedByParam(c)
 		return
 	}
 	err = models.DelCaseByID(caseID)
 	if err != nil {
-		c.Status(http.StatusInternalServerError)
+		//c.Status(http.StatusInternalServerError)
+
+		logrus.Errorf("gin: [%+v], error: [%v]", c, err)
+		FailedByOp(c)
 	}
 
-	c.Status(http.StatusOK)
+	//c.Status(http.StatusOK)
+	Success(c, nil)
 }
 
 //UpdateCaseInfo 更新case信息
@@ -79,13 +90,15 @@ func UpdateCaseInfo(c *gin.Context) {
 
 	caseID, err := strconv.Atoi(caseIDStr)
 	if err != nil {
-		c.Status(http.StatusBadRequest)
+		//c.Status(http.StatusBadRequest)
+		FailedByParam(c)
 		return
 	}
 
 	err = c.BindJSON(&caseInfo)
 	if err != nil {
-		c.Status(http.StatusBadRequest)
+		//c.Status(http.StatusBadRequest)
+		FailedByParam(c)
 		return
 	}
 
@@ -99,7 +112,9 @@ func UpdateCaseInfo(c *gin.Context) {
 
 	err = models.UpdateCaseByID(caseID, &tcase)
 	if err != nil {
-		c.Status(http.StatusInternalServerError)
+		//c.Status(http.StatusInternalServerError)
+		FailedByOp(c)
+		logrus.Errorf("gin: [%+v], error: [%v]", c, err)
 		return
 	}
 	c.Status(http.StatusOK)
@@ -116,8 +131,10 @@ func CreateCase(c *gin.Context) {
 	categorys := []models.TCaseCategory{}
 	var cnt int64
 	if err != nil {
-		logrus.Errorf("get error request %v", err)
-		goto FAILED
+		//logrus.Errorf("get error request %v", err)
+		logrus.Errorf("gin: [%v] error [%+v]", c, err)
+		FailedByParam(c)
+		return
 	}
 	dbCase.Name = info.CaseInfo.Name
 	dbCase.Addr = info.CaseInfo.Addr
@@ -127,8 +144,9 @@ func CreateCase(c *gin.Context) {
 	dbCase.Type = info.CaseInfo.Type
 	cnt, err = engine.InsertOne(&dbCase)
 	if err != nil {
-		logrus.Errorf("%v", err)
-		goto FAILED
+		logrus.Errorf("gin: [%v] error [%+v]", c, err)
+		FailedByOp(c)
+		return
 	}
 
 	logrus.Infof("insert case id is %d", dbCase.ID)
@@ -142,12 +160,11 @@ func CreateCase(c *gin.Context) {
 	cnt, err = engine.Insert(categorys)
 
 	if err != nil {
-		logrus.Errorf("%v", err)
+		FailedByOp(c)
+		logrus.Errorf("gin: [%v] error [%+v]", c, err)
+		return
 	}
 
 	logrus.Info("insert %d to case category %d", cnt)
 	return
-FAILED:
-	c.Status(http.StatusBadRequest)
-
 }

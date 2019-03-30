@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/mfslog/DecorationBackend/form"
 	"github.com/mfslog/DecorationBackend/models"
-	"net/http"
+	"github.com/sirupsen/logrus"
 	"strconv"
 )
 
@@ -13,13 +13,15 @@ func AddCaseCategory(c *gin.Context) {
 	caseIDStr := c.Param("id")
 	caseID, err := strconv.Atoi(caseIDStr)
 	if err != nil {
-		c.Status(http.StatusBadRequest)
+		//c.Status(http.StatusBadRequest)
+		FailedByParam(c)
 		return
 	}
 	categoryInfo := form.CaseCategory{}
 	err = c.BindJSON(&categoryInfo)
 	if err != nil {
-		c.Status(http.StatusBadRequest)
+		//c.Status(http.StatusBadRequest)
+		FailedByParam(c)
 		return
 	}
 
@@ -30,11 +32,14 @@ func AddCaseCategory(c *gin.Context) {
 
 	err = models.InsertOneCaseCategory(&tcategory)
 	if err == nil {
-		c.Status(http.StatusInternalServerError)
+		//c.Status(http.StatusInternalServerError)
+		logrus.Errorf("gin: [%v] error [%+v]", c, err)
+		FailedByOp(c)
 		return
 	}
 
-	c.Status(http.StatusOK)
+	//c.Status(http.StatusOK)
+	Success(c, nil)
 	return
 }
 
@@ -43,7 +48,8 @@ func GetCaseCategory(c *gin.Context) {
 	caseIDStr := c.Param("id")
 	caseID, err := strconv.Atoi(caseIDStr)
 	if err != nil {
-		c.Status(http.StatusBadRequest)
+		//c.Status(http.StatusBadRequest)
+		FailedByParam(c)
 		return
 	}
 
@@ -57,7 +63,8 @@ func GetCaseCategory(c *gin.Context) {
 		result = append(result, tmp)
 	}
 
-	c.JSON(http.StatusOK, result)
+	//c.JSON(http.StatusOK, result)
+	Success(c, result)
 }
 
 //DelCaseCategory 删除一个case的分类
@@ -65,7 +72,8 @@ func DelCaseCategory(c *gin.Context) {
 	caseIDStr := c.Param("id")
 	caseID, err := strconv.Atoi(caseIDStr)
 	if err != nil {
-		c.Status(http.StatusBadRequest)
+		//c.Status(http.StatusBadRequest)
+		FailedByParam(c)
 		return
 	}
 
@@ -73,16 +81,21 @@ func DelCaseCategory(c *gin.Context) {
 	categoryID, err := strconv.Atoi(categoryIDStr)
 
 	if err != nil {
-		c.Status(http.StatusBadRequest)
+		//c.Status(http.StatusBadRequest)
+		logrus.Errorf("gin: [%v] error [%+v]", c, err)
+		FailedByOp(c)
 		return
 	}
 
 	err = models.DelCaseCategoryByID(caseID, categoryID)
 
 	if err != nil {
-		c.Status(http.StatusBadRequest)
+		//c.Status(http.StatusBadRequest)
+		logrus.Errorf("gin: [%v] error [%+v]", c, err)
+		FailedByOp(c)
 		return
 	}
 
-	c.Status(http.StatusOK)
+	//c.Status(http.StatusOK)
+	Success(c, nil)
 }

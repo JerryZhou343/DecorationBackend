@@ -1,11 +1,9 @@
 package controller
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/mfslog/DecorationBackend/form"
 	"github.com/mfslog/DecorationBackend/models"
-	"net/http"
 	"strconv"
 )
 
@@ -15,7 +13,8 @@ func CreateCategory(c *gin.Context) {
 	err := c.BindJSON(&info)
 	var category models.TCategory
 	if err != nil {
-		goto FAILED
+		FailedByParam(c)
+		return
 	}
 
 	category.ParentID = info.ParentID
@@ -25,11 +24,8 @@ func CreateCategory(c *gin.Context) {
 	category.Remark = info.Remark
 	category.State = 1
 	models.InsertCategory(&category)
-
-	c.Status(http.StatusCreated)
+	Success(c, nil)
 	return
-FAILED:
-	c.Status(http.StatusBadRequest)
 
 }
 
@@ -42,13 +38,14 @@ func UpdateCategory(c *gin.Context) {
 	categoryIDStr := c.Param("id")
 	var categoryID int
 	if err != nil {
-		fmt.Printf("here %v", err)
-		goto FAILED
+		FailedByParam(c)
+		return
 	}
 
 	categoryID, err = strconv.Atoi(categoryIDStr)
 	if err != nil && categoryID == 0 {
-		goto FAILED
+		FailedByParam(c)
+		return
 	}
 
 	category.Remark = info.Remark
@@ -56,11 +53,10 @@ func UpdateCategory(c *gin.Context) {
 	category.Priority = info.Priority
 
 	models.UpdateCategoryInfo(categoryID, &category)
-	c.Status(http.StatusAccepted)
-
+	//c.Status(http.StatusAccepted)
+	Success(c, nil)
 	return
-FAILED:
-	c.Status(http.StatusBadRequest)
+
 }
 
 //DelCategory 删除一个tag
@@ -70,13 +66,13 @@ func DelCategory(c *gin.Context) {
 	var categoryID int
 	categoryID, err = strconv.Atoi(categoryIDStr)
 	if err != nil && categoryID == 0 {
-		goto FAILED
+		FailedByParam(c)
+		return
 	}
 	models.DelCategory(categoryID)
-	c.Status(http.StatusAccepted)
+	Success(c, nil)
 	return
-FAILED:
-	c.Status(http.StatusBadRequest)
+
 }
 
 //GetCategory 查询一个tag
@@ -88,7 +84,8 @@ func GetCategory(c *gin.Context) {
 	var categoryID int
 	categoryID, err = strconv.Atoi(categoryIDStr)
 	if err != nil && categoryID == 0 {
-		goto FAILED
+		FailedByParam(c)
+		return
 	}
 
 	tCategory, err = models.GetCategoryByID(categoryID)
@@ -96,9 +93,7 @@ func GetCategory(c *gin.Context) {
 	categoryInfo.Name = tCategory.Name
 	categoryInfo.Priority = tCategory.Priority
 	categoryInfo.Remark = tCategory.Remark
-	c.JSON(http.StatusOK, categoryInfo)
+	Success(c, categoryInfo)
 	return
 
-FAILED:
-	c.Status(http.StatusBadRequest)
 }

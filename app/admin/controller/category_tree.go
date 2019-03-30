@@ -5,7 +5,6 @@ import (
 	"github.com/mfslog/DecorationBackend/form"
 	"github.com/mfslog/DecorationBackend/models"
 	"github.com/sirupsen/logrus"
-	"net/http"
 	"strconv"
 )
 
@@ -20,14 +19,14 @@ func GetCategoryTree(c *gin.Context) {
 
 	parentID, err = strconv.Atoi(parentIDStr)
 	if err != nil || parentID == 0 {
-		logrus.Error("prament zero")
-		goto FAILED
+		FailedByParam(c)
+		return
 	}
 	dbRet, err = models.GetChildCategoryByParentID(parentID)
 	if err != nil {
-		//TODO:记录错误原因
-		logrus.Errorf("%v\n", err)
-		goto FAILED
+		logrus.Errorf("gin [%+v], error [%+v]\n", err)
+		FailedByParam(c)
+		return
 	}
 	for _, itr := range dbRet {
 		category := form.Category{}
@@ -38,8 +37,7 @@ func GetCategoryTree(c *gin.Context) {
 		result = append(result, category)
 	}
 
-	c.JSON(http.StatusOK, result)
+	//c.JSON(http.StatusOK, result)
+	Success(c, result)
 	return
-FAILED:
-	c.Status(http.StatusNotFound)
 }

@@ -7,7 +7,6 @@ import (
 	"github.com/mfslog/DecorationBackend/models"
 	"github.com/mfslog/DecorationBackend/util"
 	"github.com/sirupsen/logrus"
-	"net/http"
 	"os"
 	"strconv"
 	"strings"
@@ -18,18 +17,21 @@ func GetPicture(c *gin.Context) {
 	picIDStr := c.Param("id")
 	picID, err := strconv.Atoi(picIDStr)
 	if err != nil {
-		c.Status(http.StatusBadRequest)
+		//c.Status(http.StatusBadRequest)
+		FailedByParam(c)
 		return
 	}
 
 	picInfo, err := models.GetPictureByID(picID)
 	if err != nil {
-		c.Status(http.StatusBadRequest)
+		//c.Status(http.StatusBadRequest)
+		FailedByParam(c)
 		return
 	}
 
 	if picInfo == nil {
-		c.Status(http.StatusNoContent)
+		//c.Status(http.StatusNoContent)
+		FailedByNotFound(c)
 		return
 	}
 
@@ -40,7 +42,8 @@ func GetPicture(c *gin.Context) {
 		Addr:   util.GetPicFullURL(picInfo.Addr),
 	}
 
-	c.JSON(http.StatusOK, formInfo)
+	//c.JSON(http.StatusOK, formInfo)
+	Success(c, formInfo)
 }
 
 //CreatePicture 添加一张图片
@@ -48,7 +51,8 @@ func CreatePicture(c *gin.Context) {
 	caseIDStr := c.PostForm("caseID")
 	caseID, err := strconv.Atoi(caseIDStr)
 	if err != nil {
-		c.Status(http.StatusBadRequest)
+		//c.Status(http.StatusBadRequest)
+		FailedByParam(c)
 		return
 	}
 	picName := c.PostForm("picName")
@@ -56,18 +60,21 @@ func CreatePicture(c *gin.Context) {
 	picFileIO, err := c.FormFile("picFile")
 	remark := c.PostForm("remark")
 	if err != nil {
-		c.Status(http.StatusBadRequest)
+		//c.Status(http.StatusBadRequest)
+		FailedByParam(c)
 		return
 	}
 	//计算文件名
 	if picName == "" {
-		c.Status(http.StatusBadRequest)
+		//c.Status(http.StatusBadRequest)
+		FailedByParam(c)
 		return
 	}
 
 	nameSlice := strings.Split(picName, ".")
 	if len(nameSlice) < 2 {
-		c.Status(http.StatusBadRequest)
+		//c.Status(http.StatusBadRequest)
+		FailedByParam(c)
 		return
 	}
 	suffix := nameSlice[(len(nameSlice) - 1)]
@@ -78,7 +85,8 @@ func CreatePicture(c *gin.Context) {
 	f, err := util.PathExists(absFileName)
 	if err != nil {
 		logrus.Errorf("%v", err)
-		c.Status(http.StatusInternalServerError)
+		//c.Status(http.StatusInternalServerError)
+		FailedByOp(c)
 		return
 	}
 
@@ -86,7 +94,8 @@ func CreatePicture(c *gin.Context) {
 	if f {
 		err = os.Remove(absFileName)
 		if err != nil {
-			c.Status(http.StatusInternalServerError)
+			//c.Status(http.StatusInternalServerError)
+			FailedByOp(c)
 			return
 		}
 	}
@@ -94,7 +103,8 @@ func CreatePicture(c *gin.Context) {
 
 	if err != nil {
 		logrus.Errorf("save file [%s] error:[%v]", absFileName, err)
-		c.Status(http.StatusInternalServerError)
+		//c.Status(http.StatusInternalServerError)
+		FailedByOp(c)
 		return
 	}
 	logrus.Infof("save file [%s] success", absFileName)
@@ -107,16 +117,19 @@ func CreatePicture(c *gin.Context) {
 
 	err = models.InsertOnePicture(&picInfo)
 	if err != nil {
-		c.Status(http.StatusInternalServerError)
+		//c.Status(http.StatusInternalServerError)
+		FailedByOp(c)
 		return
 	}
 	//c.Status(http.StatusOK)
-
-	c.JSON(http.StatusOK, gin.H{
-		"code":   http.StatusOK,
-		"msg":    "success",
-		"imgUrl": util.GetPicFullURL(relativePath),
-	})
+	/*
+		c.JSON(http.StatusOK, gin.H{
+			"code":   http.StatusOK,
+			"msg":    "success",
+			"imgUrl": util.GetPicFullURL(relativePath),
+		})
+	*/
+	Success(c, util.GetPicFullURL(relativePath))
 }
 
 //DelPicture 软删除图片
@@ -124,13 +137,15 @@ func DelPicture(c *gin.Context) {
 	picIDStr := c.Param("id")
 	picID, err := strconv.Atoi(picIDStr)
 	if err != nil {
-		c.Status(http.StatusBadRequest)
+		//c.Status(http.StatusBadRequest)
+		FailedByParam(c)
 		return
 	}
 
 	models.GetCategoryByCaseID(picID)
 
-	c.Status(http.StatusOK)
+	//c.Status(http.StatusOK)
+	Success(c, nil)
 }
 
 //UpdatePicture 更新图片的描述信息
@@ -138,7 +153,8 @@ func UpdatePicture(c *gin.Context) {
 	picIDStr := c.Param("id")
 	picID, err := strconv.Atoi(picIDStr)
 	if err != nil {
-		c.Status(http.StatusBadRequest)
+		//c.Status(http.StatusBadRequest)
+		FailedByParam(c)
 		return
 	}
 	info := form.Picture{}
@@ -150,9 +166,11 @@ func UpdatePicture(c *gin.Context) {
 	}
 	err = models.UpdateOnePicture(picID, &picInfo)
 	if err != nil {
-		c.Status(http.StatusBadRequest)
+		//c.Status(http.StatusBadRequest)
+		FailedByOp(c)
 		return
 	}
 
-	c.Status(http.StatusOK)
+	//c.Status(http.StatusOK)
+	Success(c, nil)
 }

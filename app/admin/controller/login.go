@@ -4,21 +4,22 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/mfslog/DecorationBackend/form"
 	"github.com/mfslog/DecorationBackend/models"
-	"net/http"
 )
 
 //Login 登录接口
 func Login(c *gin.Context) {
 	info := form.Login{}
-	c.BindJSON(&info)
-	if info.UserName != "" && info.Password != "" {
-		if models.CheckPassport(info.UserName, info.Password) {
-			c.Status(http.StatusOK)
-		} else {
-			c.Status(http.StatusUnauthorized)
+	err := c.BindJSON(&info)
+	if err == nil &&
+		info.UserName != "" &&
+		info.Password != "" {
+		if !models.CheckPassport(info.UserName, info.Password) {
+			FailedByLogin(c)
+			return
 		}
 	} else {
-		c.Status(http.StatusUnauthorized)
+		FailedByParam(c)
+		return
 	}
 
 	//TODO:登录成功，签发token
