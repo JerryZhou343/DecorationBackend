@@ -23,7 +23,7 @@ func JWTAuth() gin.HandlerFunc {
 		j := NewJWT()
 		claims, err := j.ParseToken(token)
 		if err != nil {
-			if err == TokenExpired {
+			if err == ErrTokenExpired {
 				if token, err = j.RefreshToken(token); err == nil {
 					c.Header("Authorization", "Bear "+token)
 					c.JSON(http.StatusOK, gin.H{"error": 0, "message": "refresh token", "token": token})
@@ -57,7 +57,7 @@ var (
 
 //CustomClaims 用户关键信息
 type CustomClaims struct {
-	ID    int    `json:"id"`
+	ID    int64  `json:"id"`
 	Name  string `json:"name"`
 	Email string `json:"email"`
 	jwt.StandardClaims
@@ -95,21 +95,21 @@ func (j *JWT) ParseToken(tokenString string) (*CustomClaims, error) {
 	if err != nil {
 		if ve, ok := err.(*jwt.ValidationError); ok {
 			if ve.Errors&jwt.ValidationErrorMalformed != 0 {
-				return nil, TokenMalformed
+				return nil, ErrTokenMalformed
 			} else if ve.Errors&jwt.ValidationErrorExpired != 0 {
 				// Token is expired
-				return nil, TokenExpired
+				return nil, ErrTokenExpired
 			} else if ve.Errors&jwt.ValidationErrorNotValidYet != 0 {
-				return nil, TokenNotValidYet
+				return nil, ErrTokenNotValidYet
 			} else {
-				return nil, TokenInvalid
+				return nil, ErrTokenInvalid
 			}
 		}
 	}
 	if claims, ok := token.Claims.(*CustomClaims); ok && token.Valid {
 		return claims, nil
 	}
-	return nil, TokenInvalid
+	return nil, ErrTokenInvalid
 }
 
 //RefreshToken  刷新Token
@@ -128,5 +128,5 @@ func (j *JWT) RefreshToken(tokenString string) (string, error) {
 		claims.StandardClaims.ExpiresAt = time.Now().Add(1 * time.Hour).Unix()
 		return j.CreateToken(*claims)
 	}
-	return "", TokenInvalid
+	return "", ErrTokenInvalid
 }

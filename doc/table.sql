@@ -4,6 +4,7 @@ CREATE TABLE `t_auth`(
   `id` BIGINT auto_increment ,
   `user_name` VARCHAR(64) NOT NULL,
   `password` VARCHAR(200) NOT NULL,
+  `slat_id` BIGINT not null,
   `created` INT    NOT NULL,
   `updated` INT default  0,
   primary key (`id`),
@@ -14,7 +15,7 @@ CREATE TABLE `t_auth`(
 
 DROP TABLE IF EXISTS `t_slat`;
 CREATE TABLE `t_slat`(
-  `id` BIGINT ,
+  `id` BIGINT auto_increment ,
   `slat` varchar(6) NOT NULL,
   `created` INT NOT NULL,
   `updated` INT default  0,

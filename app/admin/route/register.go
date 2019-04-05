@@ -3,13 +3,14 @@ package route
 import (
 	"github.com/gin-gonic/gin"
 	. "github.com/mfslog/DecorationBackend/app/admin/controller"
+	"github.com/mfslog/DecorationBackend/middleware/jwtauth"
 )
 
 //RegisterHTTPRouter 注册admin app HTTP 路由
 func RegisterHTTPRouter(r *gin.Engine) {
 
 	mgt := r.Group("/mgt/")
-	//admin.Use(jwtauth.JWTAuth())
+	mgt.Use(jwtauth.JWTAuth())
 	{
 		//单个分类
 		mgt.GET("category/:id", GetCategory)
@@ -27,9 +28,9 @@ func RegisterHTTPRouter(r *gin.Engine) {
 		mgt.DELETE("picture/:id", DelPicture)
 
 		//图片分类
-		mgt.POST("pic_category/")
-		mgt.GET("pic_category/:id")
-		mgt.DELETE("pic_category/:id")
+		mgt.POST("pic_category/", AddPicCategory)
+		mgt.GET("pic_category/:id", GetPicCategory)
+		mgt.DELETE("pic_category/:id", DelPicCategory)
 
 		//案例
 		mgt.POST("case/", CreateCase)
@@ -49,4 +50,5 @@ func RegisterHTTPRouter(r *gin.Engine) {
 func RegisterHTTPSRouter(r *gin.Engine) {
 
 	r.POST("/login", Login)
+	r.PUT("/changePassword", UpdatePwd)
 }

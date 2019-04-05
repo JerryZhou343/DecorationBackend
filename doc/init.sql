@@ -1,7 +1,7 @@
 
 
-insert into t_auth(`user_name`,`password`, `created`)
-values('jerry',  md5('123456123456'),UNIX_TIMESTAMP());
+insert into t_auth(`user_name`,`password`, `slat_id`,`created`)
+values('jerry',  md5('123456123456'),1,UNIX_TIMESTAMP());
 
 
 insert into t_slat(`id`,`slat`,`created`)
