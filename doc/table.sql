@@ -1,3 +1,4 @@
+
 DROP TABLE IF EXISTS `t_auth`;
 CREATE TABLE `t_auth`(
   `id` BIGINT auto_increment ,
@@ -47,7 +48,7 @@ CREATE TABLE `t_case`(
     `owner_name` varchar(64) default null,
     `phone_number` varchar(20) default null,
     `addr` varchar(200) default null,
-    `state` tinyint not null default 1 comment '1 激活，0 未激活'
+    `state` tinyint not null default 1 comment '1 激活，0 未激活',
     `created` int not null,
     `updated` int default 0,
     primary key (`id`)
