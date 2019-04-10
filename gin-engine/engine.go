@@ -8,19 +8,21 @@ import (
 	"net/http"
 )
 
-//Init 初始化go-gin 路由,返回 httpRouter, httpsRouter
-func Init() (httpRouter *gin.Engine, httpsRouter *gin.Engine) {
-	httpRouter = gin.Default()
-	httpsRouter = gin.Default()
+//Init 初始化go-gin 路由,返回 appRouter, cmsRouter
+func Init() (appRouter *gin.Engine, cmsRouter *gin.Engine) {
+	appRouter = gin.Default()
+	cmsRouter = gin.Default()
 	if config.ReleaseFlag() {
 		gin.SetMode(gin.ReleaseMode)
 	}
 	//图片URL
-	httpRouter.StaticFS(config.PicURLRelativePath(), http.Dir(config.GetPicPath()))
-	er.RegisterHTTPRouter(httpRouter)
+	appRouter.StaticFS(config.PicURLRelativePath(), http.Dir(config.GetPicPath()))
 
-	ar.RegisterHTTPRouter(httpRouter)
-	ar.RegisterHTTPSRouter(httpsRouter)
+	cmsRouter.StaticFS(config.PicURLRelativePath(), http.Dir(config.GetPicPath()))
 
-	return httpRouter, httpsRouter
+	er.RegisterRouter(appRouter)
+
+	ar.RegisterRouter(cmsRouter)
+
+	return appRouter, cmsRouter
 }

@@ -58,7 +58,7 @@ func main() {
 		os.Exit(-1)
 	}
 	//初始化路由
-	httpRouter, httpsRouter := engine.Init()
+	appRouter, cmsRouter := engine.Init()
 	//开启https 服务
 	if config.CRTPath() == "" ||
 		config.PrivateKeyPath() == "" {
@@ -68,13 +68,14 @@ func main() {
 	ch := make(chan error)
 	//开启https 服务
 	go func() {
-		err := httpsRouter.RunTLS(fmt.Sprintf(":%d", config.ListenTLSPort()),
+		err := cmsRouter.RunTLS(fmt.Sprintf(":%d", config.ListenTLSPort()),
 			config.CRTPath(), config.PrivateKeyPath())
 		ch <- err
 	}()
 	//开启服务
 	go func() {
-		err := httpRouter.Run(fmt.Sprintf(":%d", config.ListenPort()))
+		err := appRouter.RunTLS(fmt.Sprintf(":%d", config.ListenPort()),
+			config.CRTPath(), config.PrivateKeyPath())
 		ch <- err
 	}()
 	//异常退出

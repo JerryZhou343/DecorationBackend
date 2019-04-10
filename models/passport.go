@@ -39,7 +39,7 @@ func CheckPassport(username, passwd string) (bool, int64) {
 		if has {
 			password := md5.Sum([]byte(slat.Slat + passwd))
 			if fmt.Sprintf("%x", password[:]) == auth.Password {
-				logrus.Infof("user [%v] check password success ")
+				logrus.Infof("user [%v] check password success ", username)
 				return true, auth.ID
 			}
 			logrus.Errorf("auth password failed for user: [%v]", username)

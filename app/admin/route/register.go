@@ -7,7 +7,7 @@ import (
 )
 
 //RegisterHTTPRouter 注册admin app HTTP 路由
-func RegisterHTTPRouter(r *gin.Engine) {
+func RegisterRouter(r *gin.Engine) {
 
 	mgt := r.Group("/mgt/")
 	mgt.Use(jwtauth.JWTAuth())
@@ -42,13 +42,10 @@ func RegisterHTTPRouter(r *gin.Engine) {
 		mgt.POST("case_category/:id", AddCaseCategory)
 		mgt.DELETE("case_category/:id", DelCaseCategory)
 		mgt.GET("case_category/:id", GetCaseCategory)
+
+		//修改密码
+		r.PUT("changePassword/", UpdatePwd)
 	}
 
-}
-
-//RegisterHTTPSRouter 注册 admin app HTTPS 路由
-func RegisterHTTPSRouter(r *gin.Engine) {
-
 	r.POST("/login", Login)
-	r.PUT("/changePassword", UpdatePwd)
 }
