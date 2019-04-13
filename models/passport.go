@@ -12,20 +12,20 @@ import (
 
 //TAuth 用户信息表
 type TAuth struct {
-	ID       int64  `xorm:"'id' pk autoincr not null"`
-	UserName string `xorm:"varchar(64) not null unique"`
-	Password string `xorm:"varchar(200)"`
-	SlatID   int64  `xorm:"'slat_id' not null"`
-	Created  int    `xorm:"created"`
-	Updated  int    `xorm:"updated"`
+	ID        int64  `xorm:"'id' pk autoincr not null"`
+	UserName  string `xorm:"varchar(64) not null unique"`
+	Password  string `xorm:"varchar(200)"`
+	SlatID    int64  `xorm:"'slat_id' not null"`
+	CreatedAt int    `xorm:"created_at"`
+	UpdatedAt int    `xorm:"updated_at"`
 }
 
 //TSlat 用户盐表
 type TSlat struct {
-	ID      int64  `xorm:"'id' pk autoincr not null"`
-	Slat    string `xorm:"varchar(6) not null"`
-	Created int    `xorm:"created"`
-	Updated int    `xorm:"updated"`
+	ID        int64  `xorm:"'id' pk autoincr not null"`
+	Slat      string `xorm:"varchar(6) not null"`
+	CreatedAt int    `xorm:"created_at"`
+	UpdatedAt int    `xorm:"updated_at"`
 }
 
 // CheckPassport 校验用户登录信息是否正确

@@ -10,8 +10,8 @@ type TPicCategory struct {
 	PicID        int    `xorm:"'pic_id'"`
 	CategoryID   int    `xorm:"'category_id'"`
 	CategoryName string `xorm:"-"`
-	Created      int    `xorm:"created"`
-	Updated      int    `xorm:"updated"`
+	CreatedAt    int    `xorm:"created_at"`
+	UpdatedAt    int    `xorm:"updated_at"`
 	State        int    `xorm:"tinyint not nul default 1"`
 }
 

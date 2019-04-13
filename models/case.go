@@ -12,8 +12,8 @@ type TCase struct {
 	PhoneNumber string `xorm:"varchar(20)"`
 	Addr        string `xorm:"varchar(200)"`
 	State       int    `xorm:"tinyint default 1"`
-	Created     int    `xorm:"created"`
-	Updated     int    `xorm:"updated"`
+	CreatedAt   int    `xorm:"created_at"`
+	UpdatedAt   int    `xorm:"updated_at"`
 }
 
 //GetCaseByID 通过id获得一个Case数据对象

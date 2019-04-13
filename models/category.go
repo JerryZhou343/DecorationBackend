@@ -12,8 +12,8 @@ type TCategory struct {
 	Priority   int
 	State      int    `xorm:"default 1"`
 	Remark     string `xorm:"varchar(200)"`
-	Created    int    `xorm:"created"`
-	Updated    int    `xorm:"updated"`
+	CreatedAt  int    `xorm:"created_at"`
+	UpdatedAt  int    `xorm:"updated_at"`
 	OperatorID int    `xorm:"'operator_id'"`
 }
 

@@ -4,14 +4,14 @@ import "github.com/mfslog/DecorationBackend/db"
 
 //TPicture 图片表
 type TPicture struct {
-	ID      int    `xorm:"'id' pk autoincr"`
-	CaseID  int    `xorm:"'case_id'"`
-	Name    string `xorm:"varchar(64)"`
-	Remark  string `xorm:"varchar(1024)"`
-	Addr    string `xorm:"varchar(1024)"`
-	State   int    `xorm:not null default 1`
-	Created int    `xorm:"created"`
-	Updated int    `xorm:"updated"`
+	ID        int    `xorm:"'id' pk autoincr"`
+	CaseID    int    `xorm:"'case_id'"`
+	Name      string `xorm:"varchar(64)"`
+	Remark    string `xorm:"varchar(1024)"`
+	Addr      string `xorm:"varchar(1024)"`
+	State     int    `xorm:not null default 1`
+	CreatedAt int    `xorm:"created_at"`
+	UpdatedAt int    `xorm:"updated_at"`
 }
 
 //InsertOnePicture 插入一张图片
