@@ -90,3 +90,20 @@ func UpdatePwd(c *gin.Context) {
 
 	Success(c, nil)
 }
+
+func GetUserInfo(c *gin.Context) {
+	v, isHas := c.Get("claims")
+	if isHas == false {
+		FailedByParam(c)
+		return
+	}
+	claims := v.(*jwtauth.CustomClaims)
+	logrus.Info("getUserinfo by [%v]", claims.ID)
+	info := form.UserInfo{
+		Name:   "admin",
+		Roles:  []int{1},
+		Avatar: "null",
+	}
+
+	Success(c, info)
+}

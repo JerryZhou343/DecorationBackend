@@ -10,3 +10,9 @@ type NewPassWord struct {
 	OldPassword string `json:"oldPassword"`
 	NewPassWord string `json:"newPassword"`
 }
+
+type UserInfo struct {
+	Name   string `json:"name"`
+	Roles  []int  `json:"roles"`
+	Avatar string `json:"avatar"`
+}
