@@ -22,7 +22,7 @@ func GetCategoryTree(c *gin.Context) {
 		FailedByParam(c)
 		return
 	}
-	dbRet, err = models.GetChildCategoryByParentID(parentID)
+	dbRet, err = models.GetChildCategoryByParentID(parentID, 10, 0)
 	if err != nil {
 		logrus.Errorf("gin [%+v], error [%+v]\n", err)
 		FailedByParam(c)

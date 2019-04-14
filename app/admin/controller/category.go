@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/mfslog/DecorationBackend/form"
 	"github.com/mfslog/DecorationBackend/models"
+	"github.com/sirupsen/logrus"
 	"strconv"
 )
 
@@ -96,4 +97,51 @@ func GetCategory(c *gin.Context) {
 	Success(c, categoryInfo)
 	return
 
+}
+
+func GetCategorys(c *gin.Context) {
+	var err error
+	limitStr := c.DefaultQuery("limit", "10")
+	offsetStr := c.DefaultQuery("offset", "0")
+	parentIDStr := c.DefaultQuery("parentID", "0")
+
+	limit, err := strconv.Atoi(limitStr)
+	if err != nil {
+		FailedByParam(c)
+		return
+	}
+	offset, err := strconv.Atoi(offsetStr)
+	if err != nil {
+		FailedByParam(c)
+		return
+	}
+	parentID, err := strconv.Atoi(parentIDStr)
+	if err != nil {
+		FailedByParam(c)
+		return
+	}
+
+	dbRet, err := models.GetChildCategoryByParentID(parentID, limit, offset)
+
+	if err != nil {
+		logrus.Errorf("gin [%+v], error [%+v]\n", err)
+		FailedByParam(c)
+		return
+	}
+
+	var result []form.Category
+	for _, itr := range dbRet {
+		category := form.Category{}
+		category.ID = itr.ID
+		category.Name = itr.Name
+		category.Priority = itr.Priority
+		category.ParentID = parentID
+		category.Remark = itr.Remark
+		category.CreatedAt = itr.CreatedAt
+		result = append(result, category)
+	}
+
+	//c.JSON(http.StatusOK, result)
+	Success(c, result)
+	return
 }

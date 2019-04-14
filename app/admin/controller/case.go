@@ -11,7 +11,7 @@ import (
 )
 
 //GetCase handler 获得一个case
-func GetCase(c *gin.Context) {
+func GetCaseByID(c *gin.Context) {
 	caseIDStr := c.Param("id")
 	caseID, err := strconv.Atoi(caseIDStr)
 	if err != nil {
@@ -166,5 +166,57 @@ func CreateCase(c *gin.Context) {
 	}
 
 	logrus.Info("insert %d to case category %d", cnt)
+	return
+}
+
+func GetCases(c *gin.Context) {
+	limitStr := c.DefaultQuery("limit", "10")
+	offsetStr := c.DefaultQuery("offset", "0")
+	limit, err := strconv.Atoi(limitStr)
+	if err != nil {
+		FailedByParam(c)
+		return
+	}
+
+	offset, err := strconv.Atoi(offsetStr)
+	if err != nil {
+		FailedByParam(c)
+		return
+	}
+	cases, err := models.GetCases(limit, offset)
+	if err != nil {
+		//c.Status(http.StatusInternalServerError)
+		FailedByOp(c)
+		logrus.Errorf("gin: [%+v], error: [%v] ", c, err)
+		return
+	}
+	var rets []form.ComplexCaseCategory
+	for _, caseObj := range *cases {
+		ret := form.ComplexCaseCategory{}
+		ret.CaseInfo.ID = caseObj.ID
+		ret.CaseInfo.Name = caseObj.Name
+		ret.CaseInfo.Type = caseObj.Type
+		ret.CaseInfo.PhoneNumber = caseObj.PhoneNumber
+		ret.CaseInfo.OwnerName = caseObj.OwnerName
+		ret.CaseInfo.Price = caseObj.Price
+		ret.CaseInfo.Addr = caseObj.Addr
+		var categoryRet *[]*models.TCaseCategory
+		categoryRet, err = models.GetCategoryByCaseID(ret.CaseInfo.ID)
+		if err != nil {
+			FailedByOp(c)
+			logrus.Errorf("gin: [%+v], error: [%v]", c, err)
+			return
+		}
+		for _, item := range *categoryRet {
+			tmp := form.CaseCategory{}
+			tmp.CategoryID = item.CategoryID
+			tmp.RID = item.ID
+
+			ret.CategoryInfo = append(ret.CategoryInfo, tmp)
+		}
+		rets = append(rets, ret)
+	}
+
+	Success(c, rets)
 	return
 }

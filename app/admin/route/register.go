@@ -24,6 +24,7 @@ func RegisterRouter(r *gin.Engine) {
 			mgt.POST("category/", CreateCategory)
 			mgt.PUT("category/:id", UpdateCategory)
 			mgt.DELETE("category/:id", DelCategory)
+			mgt.GET("category/", GetCategorys)
 
 			//分类簇
 			mgt.GET("category_tree/:parent_id", GetCategoryTree)
@@ -42,7 +43,8 @@ func RegisterRouter(r *gin.Engine) {
 			//案例
 			mgt.POST("case/", CreateCase)
 			mgt.PUT("case/:id", UpdateCaseInfo)
-			mgt.GET("case/:id", GetCase)
+			mgt.GET("case/:id", GetCaseByID)
+			mgt.GET("case/", GetCases)
 			mgt.DELETE("case/:id", DelCase)
 
 			//案例分类

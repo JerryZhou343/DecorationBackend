@@ -30,7 +30,7 @@ CREATE TABLE `t_category`(
     `name` varchar(64) not null,
     `parent_id` BIGINT not null default 0,
     `priority` tinyint not null default 1 comment '展示顺序',
-    `state` tinyint not null default 1 comment '0 为激活，1激活',
+    `state` tinyint not null default 1 comment '0 未激活，1激活',
     `remark` varchar(200),
     `created_at` INT not null,
     `updated_at` INT default  0,

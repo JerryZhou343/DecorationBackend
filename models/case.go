@@ -52,3 +52,17 @@ func UpdateCaseByID(id int, tcase *TCase) error {
 	_, err := engine.Id(id).Update(tcase)
 	return err
 }
+
+func GetCases(limit, offset int) (*[]TCase, error) {
+	engine := db.DB()
+	result := []TCase{}
+	err := engine.OrderBy("id").Limit(limit, offset).Find(&result)
+	return &result, err
+}
+
+func GetCaseByCategoryID(categoryID, limit, offset int) (*[]TCase, error) {
+	engine := db.DB()
+	result := []TCase{}
+	err := engine.Where("type=?", categoryID).OrderBy("id").Limit(limit, offset).Find(&result)
+	return &result, err
+}
