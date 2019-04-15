@@ -10,13 +10,14 @@ type CaseCategory struct {
 
 //Case 案例定义，和浏览器交换数据模型定义
 type Case struct {
-	ID          int    `json:"id"`
-	Name        string `json:"name"`
-	Price       int    `json:"price"`
-	Type        int    `json:"type"`
-	OwnerName   string `json:"ownerName"`
-	PhoneNumber string `json:"phoneNumber"`
-	Addr        string `json:"addr"`
+	ID          int     `json:"id"`
+	Name        string  `json:"name"`
+	Price       float32 `json:"price"`
+	Type        int     `json:"type"`
+	Priority    int     `json:"priority"`
+	OwnerName   string  `json:"ownerName"`
+	PhoneNumber string  `json:"phoneNumber"`
+	Addr        string  `json:"addr"`
 }
 
 //ComplexCaseCategory 复合类型，包含案例信息和案例分类信息

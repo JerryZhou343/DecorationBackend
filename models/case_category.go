@@ -4,7 +4,7 @@ import "github.com/mfslog/DecorationBackend/db"
 
 //TCaseCategory 案例分类表定义
 type TCaseCategory struct {
-	ID         int `xorm:"'id' pk autoincr`
+	ID         int `xorm:"'id' pk autoincr"`
 	CaseID     int `xorm:"'case_id'"`
 	CategoryID int `xorm:"'category_id'"`
 	CreatedAt  int `xorm:"created_at"`

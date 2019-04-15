@@ -42,6 +42,7 @@ func GetCaseByID(c *gin.Context) {
 	ret.CaseInfo.OwnerName = caseObj.OwnerName
 	ret.CaseInfo.Price = caseObj.Price
 	ret.CaseInfo.Addr = caseObj.Addr
+	ret.CaseInfo.Priority = caseObj.Priority
 	var categoryRet *[]*models.TCaseCategory
 	categoryRet, err = models.GetCategoryByCaseID(ret.CaseInfo.ID)
 	if err != nil {
@@ -77,6 +78,7 @@ func DelCase(c *gin.Context) {
 
 		logrus.Errorf("gin: [%+v], error: [%v]", c, err)
 		FailedByOp(c)
+		return
 	}
 
 	//c.Status(http.StatusOK)
@@ -90,14 +92,13 @@ func UpdateCaseInfo(c *gin.Context) {
 
 	caseID, err := strconv.Atoi(caseIDStr)
 	if err != nil {
-		//c.Status(http.StatusBadRequest)
 		FailedByParam(c)
 		return
 	}
 
 	err = c.BindJSON(&caseInfo)
 	if err != nil {
-		//c.Status(http.StatusBadRequest)
+		logrus.Errorf("param json failed [%v]", err)
 		FailedByParam(c)
 		return
 	}
@@ -109,6 +110,7 @@ func UpdateCaseInfo(c *gin.Context) {
 	tcase.PhoneNumber = caseInfo.PhoneNumber
 	tcase.OwnerName = caseInfo.OwnerName
 	tcase.Type = caseInfo.Type
+	tcase.Priority = caseInfo.Priority
 
 	err = models.UpdateCaseByID(caseID, &tcase)
 	if err != nil {
@@ -142,6 +144,7 @@ func CreateCase(c *gin.Context) {
 	dbCase.Price = info.CaseInfo.Price
 	dbCase.PhoneNumber = info.CaseInfo.PhoneNumber
 	dbCase.Type = info.CaseInfo.Type
+	dbCase.Priority = info.CaseInfo.Priority
 	cnt, err = engine.InsertOne(&dbCase)
 	if err != nil {
 		logrus.Errorf("gin: [%v] error [%+v]", c, err)
@@ -200,6 +203,7 @@ func GetCases(c *gin.Context) {
 		ret.CaseInfo.OwnerName = caseObj.OwnerName
 		ret.CaseInfo.Price = caseObj.Price
 		ret.CaseInfo.Addr = caseObj.Addr
+		ret.CaseInfo.Priority = caseObj.Priority
 		var categoryRet *[]*models.TCaseCategory
 		categoryRet, err = models.GetCategoryByCaseID(ret.CaseInfo.ID)
 		if err != nil {

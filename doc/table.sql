@@ -46,6 +46,7 @@ CREATE TABLE `t_case`(
     `name` varchar(64) not null,
     `price` int not null default 0,
     `type` int not null default 0 comment '0 个人，1 公司',
+    `priority` tinyint not null default 1 comment '展示顺序',
     `owner_name` varchar(64) default null,
     `phone_number` varchar(20) default null,
     `addr` varchar(200) default null,
