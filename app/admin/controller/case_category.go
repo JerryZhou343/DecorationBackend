@@ -3,10 +3,13 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/mfslog/DecorationBackend/form"
+	"github.com/mfslog/DecorationBackend/global"
 	"github.com/mfslog/DecorationBackend/models"
 	"github.com/sirupsen/logrus"
 	"strconv"
 )
+
+const ParentCaseCategory = 1
 
 //AddCaseCategory 添加一个分类
 func AddCaseCategory(c *gin.Context) {
@@ -98,4 +101,26 @@ func DelCaseCategory(c *gin.Context) {
 
 	//c.Status(http.StatusOK)
 	Success(c, nil)
+}
+
+func GetCaseCategories(c *gin.Context) {
+	categories, err := models.GetChildCategoryByParentID(global.ParentCaseCategory, 1000, 0)
+	if err != nil {
+		FailedByOp(c)
+		return
+	}
+	ret := []form.Category{}
+	for _, itr := range categories {
+		tmp := form.Category{
+			ID:        itr.ID,
+			Name:      itr.Name,
+			Priority:  itr.Priority,
+			ParentID:  itr.ParentID,
+			Remark:    itr.Remark,
+			CreatedAt: itr.CreatedAt,
+		}
+		ret = append(ret, tmp)
+	}
+	Success(c, ret)
+	return
 }

@@ -24,6 +24,9 @@ func GetChildCategoryByParentID(pid, limit, offset int) ([]TCategory, error) {
 	engine := db.DB()
 	result := []TCategory{}
 	err := engine.Where("parent_id=?", pid).OrderBy("id").Limit(limit, offset).Find(&result)
+	if err != nil {
+		logrus.Errorf("GetChildCategoryByParentID error [%v]", err)
+	}
 	return result, err
 }
 

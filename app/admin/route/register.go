@@ -51,6 +51,7 @@ func RegisterRouter(r *gin.Engine) {
 			mgt.POST("case_category/:id", AddCaseCategory)
 			mgt.DELETE("case_category/:id", DelCaseCategory)
 			mgt.GET("case_category/:id", GetCaseCategory)
+			mgt.GET("case_category", GetCaseCategories)
 		}
 
 		user := api.Group("user/")

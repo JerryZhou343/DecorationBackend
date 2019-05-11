@@ -1,6 +1,9 @@
 package models
 
-import "github.com/mfslog/DecorationBackend/db"
+import (
+	"github.com/mfslog/DecorationBackend/db"
+	"github.com/sirupsen/logrus"
+)
 
 //TCaseCategory 案例分类表定义
 type TCaseCategory struct {
@@ -42,4 +45,14 @@ func DelCaseCategoryByID(caseID, categoryID int) error {
 			State: 0,
 		})
 	return err
+}
+
+func GetCaseCategories() ([]*TCaseCategory, error) {
+	engine := db.DB()
+	ret := []*TCaseCategory{}
+	err := engine.Find(&ret)
+	if err != nil {
+		logrus.Errorf("GetCaseCategories error [%v]", err)
+	}
+	return ret, err
 }
